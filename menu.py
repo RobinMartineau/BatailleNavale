@@ -80,28 +80,31 @@ def deleteGame() :
                 return 
             case 1 : 
                 os.system('clear')
+                try : 
+                    return 
+                except :
+                    return 
+                
             case 2 :
                 os.system('clear')
                 try : 
                     folder = "historicGames/"
-                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ?")
+                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ? (o/n) ")
                     
-                    if choiceDeleteAll == "o" : 
+                    if choiceDeleteAll == "o" or choiceDeleteAll == "oui" : 
                         filesDelete = False
                         for file in os.listdir(folder):
                             if file.endswith(".json") :
                                 filePath = os.path.join(folder,file)
                                 
-                                #test
-                                print(filePath)
-                                
                                 with open(filePath, "r", encoding="utf-8") as f :
                                     data = json.load(f)
 
-                                if data.get("terminer") is False:
+                                if data.get("game", {}).get("state") is False:
                                     filesDelete = True
                                     print(f"Suppression du fichier : {file}")
                                     os.remove(filePath)
+
                         if filesDelete == False : 
                             print("Aucune partie n'a été supprimé !")
                     else : 
