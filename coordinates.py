@@ -16,7 +16,7 @@ def reset_grid(x = 10,y = 5,z = 3):
 def get_grid(player:int):
     return data['game']['player_'+str(player)]['grid']
 
-def add_grid(grid:list):
-    data['game']['player_'+str(i)]['grid'] = grid
+def add_grid(grid:list,player:int):
+    data['game']['player_'+str(player)]['grid'] = grid
     with open("data.json", "w") as f:
         json.dump(data, f, indent=2)
