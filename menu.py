@@ -1,6 +1,7 @@
 import json
 import os
 from Error import *
+from coordinates import *
 
 def Menu() :
     while True:
@@ -80,31 +81,21 @@ def deleteGame() :
                 return 
             case 1 : 
                 os.system('clear')
-                try : 
-                    return 
-                except :
-                    return 
-                
             case 2 :
                 os.system('clear')
                 try : 
                     folder = "historicGames/"
-                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ? (o/n) ")
+                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ?")
                     
-                    if choiceDeleteAll == "o" or choiceDeleteAll == "oui" : 
+                    if choiceDeleteAll == "o" : 
                         filesDelete = False
                         for file in os.listdir(folder):
                             if file.endswith(".json") :
                                 filePath = os.path.join(folder,file)
-                                
-                                with open(filePath, "r", encoding="utf-8") as f :
-                                    data = json.load(f)
-
-                                if data.get("game", {}).get("state") is False:
+                                if get_state() is False:
                                     filesDelete = True
                                     print(f"Suppression du fichier : {file}")
                                     os.remove(filePath)
-
                         if filesDelete == False : 
                             print("Aucune partie n'a été supprimé !")
                     else : 

@@ -20,3 +20,6 @@ def add_grid(grid:list,player:int):
     data['game']['player_'+str(player)]['grid'] = grid
     with open("data.json", "w") as f:
         json.dump(data, f, indent=2)
+
+def get_state():
+    return data['game']['state']
