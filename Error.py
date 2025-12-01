@@ -1,4 +1,4 @@
-def TestInt() :
+def testInt() :
     while True:
             try : 
                 choice = int(input())
