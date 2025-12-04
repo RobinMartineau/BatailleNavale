@@ -156,16 +156,15 @@ class Plateau:
             cell.revealed = True
             cell.adjacent_revealed = reveal_cells
             
-
-if __name__ == "__main__":
-    plateau = Plateau(5, 5, 2)
-    boat = Boat("Bato")
-    plateau.place_boat((3, 3, 0), 3, False, boat)
-    plateau.place_boat((1, 0, 0), 2, False, boat)
-    plateau.place_boat((3, 1, 1), 1, True, boat)
-    plateau.display()
-    # plateau.display(False)
-    # plateau.shoot(3, 2, 0)
-    # plateau.display()
-    # plateau.display(False)
+# if __name__ == "__main__":
+#     plateau = Plateau(5, 5, 2)
+#     boat = Boat("Bato")
+#     plateau.place_boat((3, 3, 0), 3, False, boat)
+#     plateau.place_boat((1, 0, 0), 2, False, boat)
+#     plateau.place_boat((3, 1, 1), 1, True, boat)
+#     plateau.display()
+#     plateau.display(False)
+#     plateau.shoot(3, 2, 0)
+#     plateau.display()
+#     plateau.display(False)
     
