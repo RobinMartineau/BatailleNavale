@@ -1,5 +1,8 @@
+from uuid import uuid4
+
 class Boat:
     def __init__(self, name: str, positions: list[tuple[int, int, int]] = [], hits: list[tuple[int, int, int]] = []):
+        self.id: str = str(uuid4())
         self.name: str = name
         self.positions: list[tuple[int, int, int]] = positions
         self.hits: list[tuple[int, int, int]] = hits

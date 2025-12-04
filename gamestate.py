@@ -4,13 +4,14 @@ from uuid import uuid4
 
 class Player:
     def __init__(self, name: str):
-        self.id = str(uuid4())
+        self.id: str = str(uuid4())
         self.name: str = name
-        self.ships: list[Boat] = []
+        self.boats: list[Boat] = []
         self.plateau: Plateau | None = None
 
 class GameState:
     def __init__(self, p1: Player, p2: Player, plateau_size: tuple[int, int, int] = (7, 5, 3)):
+        self.id: str = str(uuid4())
         self.p1: Player = p1
         self.p2: Player = p2
         

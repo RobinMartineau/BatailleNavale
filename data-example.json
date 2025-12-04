@@ -1,0 +1,1401 @@
+{
+    "comment": "// Example of the JSON structure representing the game state for a 7x5x3 (w,h,d) plateau with two players and their 3 boats (size 1, 2 and 3) not yet placed on the grid.",
+
+    "<game_id>": {
+        "title": "",
+        "started_at": "<timestamp>",
+        "ended_at": "<timestamp or null>",
+        "turns": 0,
+        "phase": "placement",
+        "current_turn": "<playerID>",
+        "winner": "<playerID or null>",
+        "players": {
+            "<player_1_ID>": {
+                "name": "<player_1_name>",
+                "boats": {
+                    "<boat_1_ID>": {
+                        "name": "<boat_1_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 1
+                    },
+                    "<boat_2_ID>": {
+                        "name": "<boat_2_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 2
+                    },
+                    "<boat_3_ID>": {
+                        "name": "<boat_3_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 3
+                    }
+                },
+                "plateau": {
+                    "0": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ],
+                    "1": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ],
+                    "2": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ]
+                }
+            },
+            "<player_2_ID>": {
+                "name": "<player_2_name>",
+                "boats": {
+                    "<boat_1_ID>": {
+                        "name": "<boat_1_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 1
+                    },
+                    "<boat_2_ID>": {
+                        "name": "<boat_2_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 2
+                    },
+                    "<boat_3_ID>": {
+                        "name": "<boat_3_name>",
+                        "positions": [],
+                        "hits": [],
+                        "size": 3
+                    }
+                },
+                "plateau": {
+                    "0": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ],
+                    "1": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ],
+                    "2": [
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ],
+                        [
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            },
+                            {
+                                "boat": "<boatID> or null",
+                                "hit": false,
+                                "revealed": false,
+                                "adjacent_revealed": false
+                            }
+                        ]
+                    ]
+                }
+            }
+        },
+        "config": {
+            "plateau_size": [7, 5, 3],
+            "boats_sizes": [1, 2, 3]
+        }
+    }
+}
