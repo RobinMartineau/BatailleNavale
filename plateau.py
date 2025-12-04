@@ -24,6 +24,12 @@ class Boat:
             "hits": self.hits,
             "size": self.size
         }
+    
+    def from_dict(data: dict) -> 'Boat':
+        boat = Boat(data["name"], data["positions"], data["hits"])
+        boat.size = data["size"]
+        boat.id = data["id"]
+        return boat
 
 class Cell:
     def __init__(self):
@@ -180,6 +186,23 @@ class Plateau:
 
     def to_dict(self) -> dict:
         return {f"{i}": grid.to_array() for i, grid in enumerate(self.grids)}
+    
+    def from_dict(data: dict, boats: list[Boat]) -> 'Plateau':
+        depth = len(data)
+        width = len(data["0"][0]) - 1
+        height = len(data["0"]) - 1
+        plateau = Plateau(width, height, depth)
+        for z_str, grid_data in data.items():
+            z = int(z_str)
+            for y in range(height + 1):
+                for x in range(width + 1):
+                    cell_data = grid_data[y][x]
+                    cell = plateau.grids[z].cells[y][x]
+                    cell.hit = cell_data["hit"]
+                    cell.revealed = cell_data["revealed"]
+                    cell.adjacent_revealed = cell_data["adjacent_revealed"]
+                    cell.boat = next((boat for boat in boats if boat.id == cell_data["boat"]), None) if cell_data["boat"] else None
+        return plateau
             
 # if __name__ == "__main__":
 #     plateau = Plateau(5, 5, 2)
