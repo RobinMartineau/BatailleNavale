@@ -2,6 +2,9 @@ import json
 import os
 from Error import *
 from coordinates import *
+from plateau import *
+import random
+
 
 def Menu() :
     while True:
@@ -23,8 +26,10 @@ def Menu() :
                 newGame()
             case 2 :
                 os.system('clear')
+                gameExists()
             case 3 :
                 os.system('clear')
+                historicGames()
             case 4 :
                 os.system('clear')
                 deleteGame()
@@ -49,9 +54,11 @@ def newGame():
                 return 
             case 1 :
                 os.system('clear')
+                game(5, 10, 3)
             case 2 :
                 os.system('clear')
-                width, length, height = personalizedBoard()
+                width, height, depth = personalizedBoard()
+                game(width, height, depth)
             case _ :
                 os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
@@ -60,11 +67,11 @@ def personalizedBoard() :
     while True : 
         print("\nQuel largeur pour le plateau ? ")
         width = testInt()
-        print("\nQuel largeur pour le plateau ? ")
-        length = testInt()
-        print("\nQuel largeur pour le plateau ? ")
+        print("\nQuel longueur pour le plateau ? ")
         height = testInt()
-        return (width, length, height)
+        print("\nQuel profondeur pour le plateau ? ")
+        depth = testInt()
+        return (width, height, depth)
 
 def deleteGame() : 
     while True: 
@@ -107,3 +114,56 @@ def deleteGame() :
                 os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 
+def gameExists() :
+    return
+
+def historicGames() :
+    return
+
+## WIP start game and place boat aleatorily
+def game(width: int, height: int, depth: int) :
+
+    plateaujoueur1 = Plateau(5, 10, 3)
+    plateaujoueur2 = Plateau(5, 10, 3)
+
+    boatPlacement(plateaujoueur1,1)
+    boatPlacement(plateaujoueur2,2)
+
+    while True :
+        # Lancement de la game ici
+        
+            
+        return
+
+
+# Place random boats on the plateau
+def boatPlacement(plateau: Plateau,player_id: int) : 
+
+    # WIP -> create random boat placement but not for all player yet 
+    boat_sizes = [3, 2, 1]
+    
+    for size in boat_sizes:
+        placed = False
+        
+        while not placed:
+            is_horizontal = random.choice([True, False])
+            
+            if is_horizontal:
+                x = random.randint(0, plateau.width - size)
+                y = random.randint(0, plateau.height - 1)
+            else:
+                x = random.randint(0, plateau.width - 1)
+                y = random.randint(0, plateau.height - size)
+            
+            z = random.randint(0, plateau.depth - 1)
+            boat = Boat(f"Boat_{size}")
+            
+            if plateau.is_within_bounds(x, y, z):
+                try:
+                    plateau.place_boat((x, y, z), size, is_horizontal, boat)
+                    placed = True
+                except :
+                    continue
+    print(f"Plateau du joueur {player_id} :")
+    plateau.display(True)
+    
