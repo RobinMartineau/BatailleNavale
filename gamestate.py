@@ -1,6 +1,11 @@
 import time
 from plateau import *
 from uuid import uuid4
+import json
+import os
+from pathlib import Path
+
+GAMESTATES_DIR = "./saved_games/"
 
 class Player:
     def __init__(self, name: str):
@@ -8,6 +13,13 @@ class Player:
         self.name: str = name
         self.boats: list[Boat] = []
         self.plateau: Plateau | None = None
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "boats": {f"{boat.id}": boat.to_dict() for boat in self.boats},
+            "plateau": self.plateau.to_dict() if self.plateau else None,
+        }
 
 class GameState:
     def __init__(self, p1: Player, p2: Player, plateau_size: tuple[int, int, int] = (7, 5, 3)):
@@ -36,3 +48,41 @@ class GameState:
         else:
             self.current_turn = self.p1.id
         self.turns += 1
+
+    #TODO
+    #def init_from_json(self, file_path: str):
+        #"""Initialize the game state from a JSON-like dictionary."""
+        
+
+    def save_gamestate(self):
+        """Save the current game state to a JSON-like dictionary."""
+        savedGamesDirPath = Path(GAMESTATES_DIR)
+        if not savedGamesDirPath.exists():
+            os.makedirs(savedGamesDirPath)
+        file_path = os.path.join(GAMESTATES_DIR, f"{self.id}.json")
+        
+        gamestate_dict = self.to_dict()
+
+        gamestate_json = json.dumps(gamestate_dict, indent=4)
+
+        with open(file_path, 'w') as f:
+            f.write(gamestate_json)
+
+    def to_dict(self) -> dict:
+        return {
+            "title": "",
+            "started_at": self.started_at,
+            "ended_at": self.ended_at or None,
+            "turns": self.turns,
+            "current_turn": self.current_turn,
+            "phase": self.phase,
+            "winner": self.winner or None,
+            "players": {f"{player.id}": player.to_dict() for player in [self.p1, self.p2]},
+            "config": {}
+        }
+    
+if __name__ == "__main__":
+    p1 = Player("Alice")
+    p2 = Player("Bob")
+    gamestate = GameState(p1, p2)
+    gamestate.save_gamestate()

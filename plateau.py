@@ -16,6 +16,14 @@ class Boat:
     def is_sunk(self) -> bool:
         """Check if the boat is sunk."""
         return len(self.hits) == self.size
+    
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "positions": self.positions,
+            "hits": self.hits,
+            "size": self.size
+        }
 
 class Cell:
     def __init__(self):
@@ -50,6 +58,14 @@ class Cell:
             return 'V ' if self.adjacent_revealed else 'R '  # Revealed cell with/without adjacent ship
         else:
             return '. '  # Unrevealed cell
+        
+    def to_dict(self) -> dict:
+        return {
+            "boat": self.boat.id if self.boat else None,
+            "hit": self.hit,
+            "revealed": self.revealed,
+            "adjacent_revealed": self.adjacent_revealed
+        }
 
 class Grid:
     def __init__(self, width: int, height: int, depth: int = 0):
@@ -104,6 +120,9 @@ class Grid:
             cell.boat.hits.append((x, y))
             print("Hit!")
             return 1
+        
+    def to_array(self) -> dict:
+        return [[cell.to_dict() for cell in row] for row in self.cells]
 
 class Plateau:
     def __init__(self, width, height, depth):
@@ -158,6 +177,9 @@ class Plateau:
                 continue
             cell.revealed = True
             cell.adjacent_revealed = reveal_cells
+
+    def to_dict(self) -> dict:
+        return {f"{i}": grid.to_array() for i, grid in enumerate(self.grids)}
             
 # if __name__ == "__main__":
 #     plateau = Plateau(5, 5, 2)
