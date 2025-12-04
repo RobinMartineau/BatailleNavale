@@ -1,0 +1,21 @@
+{
+  "game": {
+    "id": "2",
+    "time": "2025-12-04 10:41:02",
+    "state": false,
+    "player_1" : {
+      "name" : "Milo",
+      "grille_player_1" : {
+
+      }
+    },
+    "player_2" : {
+      "name" : "Robin",
+      "grille_player_2" : {
+        
+      }
+    }
+  }
+}
+
+     

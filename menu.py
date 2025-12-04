@@ -4,7 +4,7 @@ from Error import *
 from coordinates import *
 from plateau import *
 import random
-
+import time
 
 def Menu() :
     while True:
@@ -56,8 +56,8 @@ def newGame():
                 os.system('clear')
                 game(5, 10, 3)
             case 2 :
-                os.system('clear')
                 width, height, depth = personalizedBoard()
+                os.system('clear')
                 game(width, height, depth)
             case _ :
                 os.system('clear')
@@ -123,24 +123,63 @@ def historicGames() :
 ## WIP start game and place boat aleatorily
 def game(width: int, height: int, depth: int) :
 
-    plateaujoueur1 = Plateau(5, 10, 3)
-    plateaujoueur2 = Plateau(5, 10, 3)
+    plateaujoueur1 = Plateau(width, height, depth)
+    plateaujoueur2 = Plateau(width, height, depth)
 
     boatPlacement(plateaujoueur1,1)
     boatPlacement(plateaujoueur2,2)
 
+    player1Boat1Name = "Alpha"
+    player1Boat2Name = "Beta"
+    player1Boat3Name = "Charlie"
+    player2Boat1Name = "Red force"
+    player2Boat2Name = "Oro Jackson"
+    player2Boat3Name = "Thousand sunny"
+    
+    os.system('clear')
+
+    player1Name = input("Quel est le nom du 1e joueur ?\n")
+    player2Name = input("Quel est le nom du 2e joueur ?\n")
+    
+    tour = player1Name
     while True :
-        # Lancement de la game ici
+        if tour == plateaujoueur1 :
+            plateaujoueur1.display()
+            plateaujoueur1.display(False)
+        else : 
+            plateaujoueur2.display()
+            plateaujoueur2.display(False)
+
+        print(f"Au tour de {tour} de jouer :")
+
+        print("Où voulez-vous tirer ?")
+
+        print("\n case largeur ? ")
+        caseWidth = testInt()
+        print("\ncase longueur ? ")
+        caseHeight = testInt()
+        print("\n case profondeur ? ")
+        caseDepth = testInt()
+
+        os.system('clear')
+
+        if tour == player1Name : 
+            plateaujoueur1.shoot(caseHeight,caseWidth,caseDepth)
+        else : 
+            plateaujoueur2.shoot(caseHeight,caseWidth,caseDepth)
         
-            
-        return
+        plateaujoueur1.display(False)
+
+        time.sleep(5)
+
+        tour = player2Name if tour == player1Name else player1Name
 
 
 # Place random boats on the plateau
 def boatPlacement(plateau: Plateau,player_id: int) : 
 
     # WIP -> create random boat placement but not for all player yet 
-    boat_sizes = [3, 2, 1]
+    boat_sizes = [1,2,3]
     
     for size in boat_sizes:
         placed = False
