@@ -23,6 +23,15 @@ def charge():
     sleep(0.9)
     stop_music()
 
+def goofy_fart():
+    """
+    Prout
+    """
+    init_music(0.1,"musics\goofy-ahh-fart.mp3")
+    sleep(0.6)
+    stop_music()
+
+
 
 def stop_music():
     pygame.mixer.music.stop()
@@ -31,3 +40,4 @@ if __name__ == "__main__":
     while(1):
         BRRRRRLAA()
         charge()
+        goofy_fart()
