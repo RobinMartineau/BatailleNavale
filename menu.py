@@ -1,14 +1,18 @@
 import json
 import os
+import random
+import time
+
 from Error import *
 from coordinates import *
 from plateau import *
 from animation_shell import *
-import random
-import time
+from music import *
 
 #region Menu Function
 def Menu() :
+    os.system('clear')
+    background_music()
     print(AscciNameBatailleNavale())
     input("Appuyez sur Entrée pour continuer...")
     os.system('clear')
@@ -229,6 +233,8 @@ def game(width: int, height: int, depth: int) :
     player2Name = input("Quel est le nom du 2e joueur ?\n")
     
     tour = player1Name
+    
+    game_music()
     while True :
         if tour == plateaujoueur1 :
             plateaujoueur1.display()

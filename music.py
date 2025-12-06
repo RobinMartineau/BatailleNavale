@@ -53,6 +53,13 @@ def background_music():
     Musique de fond
     """
     init_music(0.0,"musics/backmusic.mp3")
+
+def game_music():
+    stop_music()
+    """
+    Musique de jeu
+    """
+    init_music(0.0,"musics/game/gamemusic.mp3")
 #endregion
 
 #region Music control functions

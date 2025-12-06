@@ -14,7 +14,6 @@ def AscciNameBatailleNavale() :
                                                                                                                              
 """
 
-<<<<<<< HEAD
 def AsciiNameFinPartie() :
     return r"""
          /$$$$$$$$ /$$                       /$$                 /$$                                                 /$$     /$$                 /$$ /$$
@@ -29,8 +28,4 @@ def AsciiNameFinPartie() :
                                                                                     | $$                                                                
                                                                                     |__/                                                                
     """
-
 #endregion
-=======
-
->>>>>>> bece01c (Ajout de fonction pour la musique)
