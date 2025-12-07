@@ -54,12 +54,47 @@ def background_music():
     """
     init_music(0.0,"musics/backmusic.mp3")
 
+#region Specific sound effect functions in game
+
 def game_music():
     stop_music()
     """
     Musique de jeu
     """
     init_music(0.0,"musics/game/gamemusic.mp3")
+
+
+def explosion_sound() :
+    """
+        Explosion sound when boat hit !
+    """
+    play_sound_on_channel(
+        channel_id=4,
+        file_path="musics/game/explosion.mp3",
+        volume=0.8
+    )
+
+def sonar_sound() : 
+    """
+        Sonar sound when boat is side of shot
+    """
+    play_sound_on_channel(
+        channel_id=5,
+        file_path="musics/game/sonar.mp3",
+        volume=0.8
+    )
+
+def torpille_sound() : 
+    """
+        Torpille sound when shot 
+    """
+    play_sound_on_channel(
+        channel_id=6,
+        file_path="musics/game/torpille.mp3",
+        volume=0.8
+    )
+
+#endregion
 #endregion
 
 #region Music control functions

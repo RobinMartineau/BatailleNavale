@@ -1,4 +1,5 @@
 from uuid import uuid4
+from music import *
 
 class Boat:
     def __init__(self, name: str, positions: list[tuple[int, int, int]] = [], hits: list[tuple[int, int, int]] = []):
@@ -89,6 +90,8 @@ class Grid:
 
     def shoot(self, x: int, y: int) -> int:
         print(f"Shooting at ({x}, {y}, {self.depth})")
+        torpille_sound()
+        sleep(2)
         if not self.is_within_bounds(x, y):
             print("Shot is out of bounds.")
             return -1
@@ -102,6 +105,8 @@ class Grid:
         else:
             cell.hit = True
             cell.boat.hits.append((x, y))
+
+            explosion_sound()
             print("Hit!")
             return 1
 
@@ -123,6 +128,26 @@ class Plateau:
             print(f"{(z+1)*100}m")
             self.grids[z].display(owner_view=owner_view)
         print("="*20)
+
+    def display_version2(self, owner_view: bool = True):
+        """Display the plateau from the owner's or opponent's view."""
+
+        # Titre principal
+        print("┌" + "─" * 46 + "┐")
+        print(f"│        {'  OWNER ' if owner_view else 'OPPONENT'}'S VIEW OF THE PLATEAU        │")
+        print("└" + "─" * 46 + "┘\n")
+
+        # Affichage de chaque niveau
+        for z in range(self.depth):
+            depth_label = f"{(z + 1) * 100}m"
+
+            print("┌" + "─" * 20 + f" {depth_label:^8} " + "─" * 20 + "┐")
+            self.grids[z].display(owner_view=owner_view)
+            print("└" + "─" * 50 + "┘\n")
+
+        # Ligne de fin
+        print("═" * 52)
+
 
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
         """Place a boat at the given position with specified orientation and size."""
@@ -157,6 +182,7 @@ class Plateau:
             if cell.revealed and not cell.adjacent_revealed:
                 continue
             cell.revealed = True
+            sonar_sound()
             cell.adjacent_revealed = reveal_cells
             
 # if __name__ == "__main__":
