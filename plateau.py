@@ -1,6 +1,52 @@
 from uuid import uuid4
 from music import *
 
+RESET = "\033[0m"
+CYAN = "\033[36m"
+BLUE = "\033[34m"
+YELLOW = "\033[33m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+BOLD = "\033[1m"
+GREY = "\033[90m"
+
+def cell_str_owner(cell):
+    """Return styled cell for owner view."""
+    if cell.boat:
+        if cell.boat.is_sunk():
+            return f"{RED}C {RESET}"   # Coulé
+        if cell.hit:
+            return f"{RED}T {RESET}"   # Touché
+        return f"{GREEN}B {RESET}"     # Bateau non touché
+    else:
+        if cell.revealed:
+            if cell.adjacent_revealed:
+                return f"{CYAN}V {RESET}"  # Vide proche bateau
+            return f"{BLUE}R {RESET}"      # Révélé vide
+        return ". "  # inconnu
+
+
+def cell_str_enemy(cell):
+    """Return styled cell for enemy view."""
+    if cell.hit:
+        if cell.boat:
+            if cell.boat.is_sunk():
+                return f"{RED}C {RESET}"
+            return f"{RED}T {RESET}"
+        else:
+            if cell.adjacent_revealed:
+                return f"{CYAN}V {RESET}"
+            return f"{BLUE}R {RESET}"
+
+    if cell.revealed:
+        return f"{GREY}~ {RESET}"
+
+    return ". "
+
+
+
+
+
 class Boat:
     def __init__(self, name: str, positions: list[tuple[int, int, int]] | None = None, hits: list[tuple[int, int, int]] | None = None):
         self.id: str = str(uuid4())
@@ -74,7 +120,7 @@ class Grid:
         self.cells = [[Cell() for _ in range(width + 1)] for _ in range(height + 1)]
         self.depth: int = depth
 
-    def display(self, owner_view: bool = True):
+    def displayAncienneVers(self, owner_view: bool = True):
         """Display the grid from the owner's or opponent's view."""
         f_row = '  '
         f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width + 1))
@@ -85,6 +131,34 @@ class Grid:
                 row += str(self.cells[y][x]) if owner_view else self.cells[y][x].opponent_str()
             print(row)
         print()
+
+    def display(self, owner_view: bool = True):
+        """Beautiful and modern display for a single grid layer."""
+
+        # Ligne des colonnes (A B C ...)
+        header = "    "  # espace pour le y
+        for x in range(self.width + 1):
+            header += f"{GREY}{chr(ord('A') + x)} {RESET}"
+        print(header)
+
+        # Ligne horizontale
+        print("   " + "─" * (2 * (self.width + 1)))
+
+        # Corps de la grille
+        for y in range(self.height + 1):
+            row = f"{YELLOW}{y:<2}{RESET} "  # numéro de la ligne
+
+            for x in range(self.width + 1):
+                cell = self.cells[y][x]
+                if owner_view:
+                    row += cell_str_owner(cell)
+                else:
+                    row += cell_str_enemy(cell)
+
+            print(row)
+
+        print()
+
 
     def is_within_bounds(self, x: int, y: int) -> bool:
         """Check if the given coordinates are within the plateau bounds."""
@@ -140,7 +214,7 @@ class Plateau:
         """Check if the given coordinates are within the plateau bounds."""
         return 0 <= z < self.depth and self.grids[z].is_within_bounds(x, y)
     
-    def display(self, owner_view: bool = True):
+    def displayAncienneVersion(self, owner_view: bool = True):
         """Display the plateau from the owner's or opponent's view."""
         print(f"======== {'Owner' if owner_view else 'Opponent'}'s View ========")
         for z in range(self.depth):
@@ -167,6 +241,50 @@ class Plateau:
         # Ligne de fin
         print("═" * 52)
 
+    def display(self, owner_view: bool = True):
+        """Beautiful styled display for the plateau."""
+
+        title = "OWNER VIEW" if owner_view else "OPPONENT VIEW"
+        border_top = "┌" + "─" * 48 + "┐"
+        border_bottom = "└" + "─" * 48 + "┘"
+
+        print()
+        print(border_top)
+        print(f"│{BOLD}{CYAN}{title:^48}{RESET}│")
+        print(border_bottom)
+        print()
+
+        for z in range(self.depth):
+            depth_label = f"{(z+1)*100}m"
+
+            # ── HEADER DU NIVEAU ────────────────────────────────
+            print(f"{BLUE}{BOLD}┌────── LEVEL {depth_label:^8} ──────┐{RESET}")
+
+            # Coordonnées X (colonnes)
+            header = "│    "  # espace pour le Y
+            for x in range(self.width + 1):
+                header += f"{GREY}{chr(ord('A') + x)} {RESET}"
+            header += "│"
+            print(header)
+
+            print("│" + "─" * (4 + 2 * (self.width + 1)) + "│")  # ligne horizontale
+
+            # LIGNES DU PLATEAU
+            for y in range(self.height + 1):
+                row = f"│ {YELLOW}{y}{RESET}  "
+                for x in range(self.width + 1):
+                    cell = self.grids[z].cells[y][x]
+
+                    if owner_view:
+                        row += cell_str_owner(cell)
+                    else:
+                        row += cell_str_enemy(cell)
+
+                row += "│"
+                print(row)
+
+            print(f"{BLUE}{BOLD}└" + "─" * (4 + 2 * (self.width + 1)) + "┘" + RESET)
+            print()
 
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
         """Place a boat at the given position with specified orientation and size."""
