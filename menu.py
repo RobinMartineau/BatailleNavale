@@ -61,7 +61,8 @@ def newGame():
             "│  1 · Plateau 5 × 10 × 3              │\n"
             "│  2 · (Expérimental) Taille au choix  │\n"
             "│  0 · Retour                          │\n"
-            "└──────────────────────────────────────┘"
+            "└──────────────────────────────────────┘\n"
+            "( Tapez 'exit' pour quitter la partie à tout moment.)"
         )
 
         choiceNewGame = testInt()

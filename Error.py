@@ -7,7 +7,7 @@ def testInt(prompt="", allow_exit=False):
     while True:
         raw = input(prompt)
         if allow_exit and raw.strip().lower() == "exit":
-            return ExitGame()
+            raise ExitGame()
         try:
             return int(raw)
         except ValueError:
