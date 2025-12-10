@@ -230,12 +230,10 @@ def resumeGame():
             tour = player1Name
         else:
             tour = player2Name  
-        print(f"\nAu tour de {tour} de jouer :")
-
+        print(f"\nAu tour de {tour} de jouer :\n")
         try:
-            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
-            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
-            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+            print(f"{BOLD}Où voulez-vous tirer ?{RESET}", end="")
+            caseWidth, caseHeight, caseDepth = testCellInput(gamestate, "\nEntrez les coordonnées \n(ex: A23 pour tirer en colonne A, ligne 2, profondeur 300) : ", allow_exit=True)
         except ExitGame:
             gamestate.save_gamestate()
             print("Partie sauvegardée.")
