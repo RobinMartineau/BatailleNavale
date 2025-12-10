@@ -1,3 +1,5 @@
+import os
+
 def testInt() :
     while True:
             try : 
@@ -6,3 +8,6 @@ def testInt() :
             except ValueError : 
                 print("\nErreur, le nombre n'est pas un entier !")
     return choice
+
+def clearConsole():
+    os.system('cls' if os.name == 'nt' else 'clear')

@@ -2,11 +2,11 @@ from uuid import uuid4
 from music import *
 
 class Boat:
-    def __init__(self, name: str, positions: list[tuple[int, int, int]] = [], hits: list[tuple[int, int, int]] = []):
+    def __init__(self, name: str, positions: list[tuple[int, int, int]] | None = None, hits: list[tuple[int, int, int]] | None = None):
         self.id: str = str(uuid4())
         self.name: str = name
-        self.positions: list[tuple[int, int, int]] = positions
-        self.hits: list[tuple[int, int, int]] = hits
+        self.positions: list[tuple[int, int, int]] = [tuple(pos) for pos in positions] if positions else []
+        self.hits: list[tuple[int, int, int]] = [tuple(hit) for hit in hits] if hits else []
         self.size: int = len(self.positions)
 
     def init_boat_pos(self, positions: list[tuple[int, int, int]]):
@@ -16,7 +16,7 @@ class Boat:
 
     def is_sunk(self) -> bool:
         """Check if the boat is sunk."""
-        return len(self.hits) == self.size
+        return len(self.hits) >= self.size
     
     def to_dict(self):
         return {
@@ -28,11 +28,8 @@ class Boat:
     
     @classmethod
     def from_dict(cls, data):
-        boat = cls(data["name"])
+        boat = cls(data["name"], data.get("positions"), data.get("hits"))
         boat.id = data["id"]
-        boat.positions = [tuple(pos) for pos in data["positions"]]
-        boat.hits = [tuple(hit) for hit in data["hits"]]
-        boat.size = len(boat.positions)
         return boat
     
 
@@ -122,12 +119,16 @@ class Grid:
             return 0
         else:
             cell.hit = True
-            cell.boat.hits.append((x, y))
+            cell.boat.hits.append((x, y, self.depth))
 
             explosion_sound()
             print("Hit!")
             return 1
 
+    def is_sunk(self):
+        return all(pos in self.hits for pos in self.positions)
+
+    
 class Plateau:
     def __init__(self, width, height, depth):
         self.width: int = width
@@ -185,23 +186,32 @@ class Plateau:
             pass
     
     def reveal_cells(self, position: tuple[int, int, int]):
-        """Reveal the cell at the given position and its adjacent cells."""
         x, y, z = position
-        to_check_positions = [(x, y, z), (x+1, y, z), (x-1, y, z), (x, y+1, z), (x, y-1, z), (x, y, z+1), (x, y, z-1)]
-        reveal_cells = False
-        for cx, cy, cz in to_check_positions:
-            if not self.is_within_bounds(cx, cy, cz):
-                to_check_positions.remove((cx, cy, cz))
-            else:
-                if self.grids[cz].cells[cy][cx].boat is not None and not self.grids[cz].cells[cy][cx].hit:
-                    reveal_cells = True
-        for cx, cy, cz in to_check_positions:
+
+        to_check_positions = [
+            (x, y, z),
+            (x + 1, y, z), (x - 1, y, z),
+            (x, y + 1, z), (x, y - 1, z),
+            (x, y, z + 1), (x, y, z - 1)
+        ]
+
+        valid_positions = [
+            (cx, cy, cz)
+            for cx, cy, cz in to_check_positions
+            if self.is_within_bounds(cx, cy, cz)
+        ]
+
+        reveal_adjacent = False
+        for cx, cy, cz in valid_positions:
             cell = self.grids[cz].cells[cy][cx]
-            if cell.revealed and not cell.adjacent_revealed:
-                continue
+            if cell.boat is not None and not cell.hit:
+                reveal_adjacent = True
+                break
+
+        for cx, cy, cz in valid_positions:
+            cell = self.grids[cz].cells[cy][cx]
             cell.revealed = True
-            sonar_sound()
-            cell.adjacent_revealed = reveal_cells
+            cell.adjacent_revealed = reveal_adjacent
 
     def to_dict(self):
         return {
@@ -252,19 +262,3 @@ class Plateau:
                     cell.adjacent_revealed = cell_data["adjacent_revealed"]
 
         return plateau
-
-
-
-     
-# if __name__ == "__main__":
-#     plateau = Plateau(5, 5, 2)
-#     boat = Boat("Bato")
-#     plateau.place_boat((3, 3, 0), 3, False, boat)
-#     plateau.place_boat((1, 0, 0), 2, False, boat)
-#     plateau.place_boat((3, 1, 1), 1, True, boat)
-#     plateau.display()
-#     plateau.display(False)
-#     plateau.shoot(3, 2, 0)
-#     plateau.display()
-#     plateau.display(False)
-    

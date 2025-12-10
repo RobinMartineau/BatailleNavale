@@ -4,19 +4,19 @@ import random
 import time
 
 from Error import *
-from coordinates import *
 from plateau import *
 from animation_shell import *
 from music import *
+from coordinates import *
 from gamestate import *
 
 #region Menu Function
 def Menu() :
-    os.system('clear')
+    clearConsole()
     background_music()
     print(AscciNameBatailleNavale())
     input("Appuyez sur Entrée pour continuer...")
-    os.system('clear')
+    clearConsole()
     while True:
         print(
             "┌───────────────────────────┐\n"
@@ -32,7 +32,7 @@ def Menu() :
 
         choiceMenu = testInt()
 
-        os.system('clear')
+        clearConsole()
         match choiceMenu : 
             
             case 0 : 
@@ -68,7 +68,7 @@ def newGame():
 
         choiceNewGame = testInt()
         
-        os.system('clear')
+        clearConsole()
         match choiceNewGame : 
             case 0 :
                 return 
@@ -109,7 +109,7 @@ def deleteGame() :
 
         choiceDeleteGame = testInt()
 
-        os.system('clear')
+        clearConsole()
         match choiceDeleteGame : 
             case 0 : 
                 return 
@@ -132,7 +132,7 @@ def deleteGame() :
                         filePath = os.path.join(folder, files[choiceDelete])
                         os.remove(filePath)
 
-                        os.system('clear')
+                        clearConsole()
                         print(f"\nLa partie '{files[choiceDelete]}' a été supprimée.\n")
 
                     else:
@@ -167,7 +167,7 @@ def deleteGame() :
                 except : 
                     print("Une erreur a eu lieu pendant la suppression des parties en cours")
             case _ : 
-                os.system('clear')
+                clearConsole()
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 #endregion
 
@@ -194,8 +194,8 @@ def resumeGame():
     save_id = files[choice].replace(".json", "")
 
     print("Chargement de la partie...")
-    p1 = Player("temp1")
-    p2 = Player("temp2")
+    p1 = Player("tempo1")
+    p2 = Player("tempo2")
     gamestate = GameState(p1, p2)
     gamestate.load_json(save_id)
 
@@ -208,8 +208,6 @@ def resumeGame():
     player1Name = p1.name
     player2Name = p2.name
 
-    tour = player1Name if gamestate.current_turn == p1.id else player2Name
-
     print("Partie chargée ! Reprise du jeu...")
     game_music()
 
@@ -220,21 +218,18 @@ def resumeGame():
             print("Partie sauvegardée.")
             return
 
-        if tour == player1Name:
-            print("\n=== Plateau de", player1Name, "(vue propriétaire) ===")
-            plateau1.display(True)
-
-            print("\n=== Plateau de", player1Name, "(vue adversaire) ===")
-            plateau1.display(False)
-
-        else:
-            print("\n=== Plateau de", player2Name, "(vue propriétaire) ===")
-            plateau2.display(True)
-
-            print("\n=== Plateau de", player2Name, "(vue adversaire) ===")
+        if gamestate.current_turn == p1.id:
+            plateau1.display()
             plateau2.display(False)
 
+        else:
+            plateau2.display()
+            plateau1.display(False)
 
+        if gamestate.current_turn == p1.id:
+            tour = player1Name
+        else:
+            tour = player2Name  
         print(f"\nAu tour de {tour} de jouer :")
 
         print("\n case largeur ? ")
@@ -244,20 +239,30 @@ def resumeGame():
         print("\n case profondeur ? ")
         caseDepth = testInt()
 
-        os.system('clear')
+        clearConsole()
 
-        # Tir selon le joueur
-        if tour == player1Name:
-            plateau1.shoot(caseWidth, caseHeight, caseDepth)
-        else:
+        if gamestate.current_turn == p1.id:
             plateau2.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            plateau1.shoot(caseWidth, caseHeight, caseDepth)
 
-        time.sleep(2)
+        if gamestate.is_winner():
+            winner_name = player1Name if gamestate.winner == p1.id else player2Name
+            print(f"\n Félicitations {winner_name}, vous avez gagné la partie !")
+            gamestate.save_gamestate()
+            return
 
-        tour = player2Name if tour == player1Name else player1Name
-        gamestate.current_turn = p1.id if tour == player1Name else p2.id
-        gamestate.turns += 1
+        if gamestate.current_turn == p1.id:
+            plateau2.display(False)
+        else:
+            plateau1.display(False)
 
+        time.sleep(5)
+
+        if gamestate.current_turn == p1.id:
+            gamestate.current_turn = p2.id
+        else:
+            gamestate.current_turn = p1.id
 
 #region Historic Games Functions
 def historicGames() :
@@ -279,7 +284,7 @@ def historicGames() :
         choiceFile = input()
         if 0 <= choiceVisible < len(files):
             filePath = os.path.join(folder, files[choiceVisible])
-            os.system('clear')
+            clearConsole()
             if choiceFile == "o" :
                 os.system(f'xdg-open "{filePath}" >/dev/null 2>&1')
             else :
@@ -317,8 +322,7 @@ def game(width: int, height: int, depth: int):
     boatPlacement(plateaujoueur1, gamestate.p1, 1)
     boatPlacement(plateaujoueur2, gamestate.p2, 2)
 
-
-    tour = player1Name
+    gamestate.current_turn = p1.id
     game_music()
 
     while True:
@@ -328,12 +332,17 @@ def game(width: int, height: int, depth: int):
             print("Partie sauvegardée.")
             return
 
-        if tour == plateaujoueur1 :
+        if gamestate.current_turn == p1.id:
             plateaujoueur1.display()
-            plateaujoueur1.display(False)
+            plateaujoueur2.display(False)
         else : 
             plateaujoueur2.display()
-            plateaujoueur2.display(False)
+            plateaujoueur1.display(False)
+
+        if gamestate.current_turn == p1.id:
+            tour = player1Name
+        else:
+            tour = player2Name  
 
         print(f"Au tour de {tour} de jouer :")
 
@@ -346,18 +355,28 @@ def game(width: int, height: int, depth: int):
         print("\n case profondeur ? ")
         caseDepth = testInt()
 
-        os.system('clear')
+        clearConsole()
 
-        if tour == player1Name : 
-            plateaujoueur1.shoot(caseHeight,caseWidth,caseDepth)
-        else : 
-            plateaujoueur2.shoot(caseHeight,caseWidth,caseDepth)
-        
+        if gamestate.current_turn == p1.id:
+            plateaujoueur2.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            plateaujoueur1.shoot(caseWidth, caseHeight, caseDepth)
+
+        if gamestate.is_winner():
+            winner_name = player1Name if gamestate.winner == p1.id else player2Name
+            print(f"\n Félicitations {winner_name}, vous avez gagné la partie !")
+            gamestate.save_gamestate()
+            return
+
         plateaujoueur1.display(False)
 
         time.sleep(5)
 
-        tour = player2Name if tour == player1Name else player1Name
+        if gamestate.current_turn == p1.id:
+            gamestate.current_turn = p2.id
+        else:
+            gamestate.current_turn = p1.id
+
 
 # Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
 def boatPlacement(plateau: Plateau, player: Player, player_id: int):
