@@ -8,6 +8,7 @@ from coordinates import *
 from plateau import *
 from animation_shell import *
 from music import *
+from gamestate import *
 
 #region Menu Function
 def Menu() :
@@ -171,8 +172,92 @@ def deleteGame() :
 #endregion
 
 # WIP resume game function
-def resumeGame() :
-    return
+def resumeGame():
+    folder = "saved_games/"
+    files = [f for f in os.listdir(folder) if f.endswith(".json")]
+
+    if not files:
+        print("Aucune partie à reprendre.")
+        return
+
+    print("Voici les parties disponibles :")
+    for idx, file in enumerate(files):
+        print(f"{idx+1} · {file}")
+
+    print("\nQuelle partie voulez-vous charger ?")
+    choice = testInt() - 1
+
+    if choice < 0 or choice >= len(files):
+        print("Choix invalide.")
+        return
+
+    save_id = files[choice].replace(".json", "")
+
+    print("Chargement de la partie...")
+    p1 = Player("temp1")
+    p2 = Player("temp2")
+    gamestate = GameState(p1, p2)
+    gamestate.load_json(save_id)
+
+    p1 = gamestate.p1
+    p2 = gamestate.p2
+
+    plateau1 = p1.plateau
+    plateau2 = p2.plateau
+
+    player1Name = p1.name
+    player2Name = p2.name
+
+    tour = player1Name if gamestate.current_turn == p1.id else player2Name
+
+    print("Partie chargée ! Reprise du jeu...")
+    game_music()
+
+    while True:
+        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
+        if choix.lower() == "o":
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
+        if tour == player1Name:
+            print("\n=== Plateau de", player1Name, "(vue propriétaire) ===")
+            plateau1.display(True)
+
+            print("\n=== Plateau de", player1Name, "(vue adversaire) ===")
+            plateau1.display(False)
+
+        else:
+            print("\n=== Plateau de", player2Name, "(vue propriétaire) ===")
+            plateau2.display(True)
+
+            print("\n=== Plateau de", player2Name, "(vue adversaire) ===")
+            plateau2.display(False)
+
+
+        print(f"\nAu tour de {tour} de jouer :")
+
+        print("\n case largeur ? ")
+        caseWidth = testInt()
+        print("\n case longueur ? ")
+        caseHeight = testInt()
+        print("\n case profondeur ? ")
+        caseDepth = testInt()
+
+        os.system('clear')
+
+        # Tir selon le joueur
+        if tour == player1Name:
+            plateau1.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            plateau2.shoot(caseWidth, caseHeight, caseDepth)
+
+        time.sleep(2)
+
+        tour = player2Name if tour == player1Name else player1Name
+        gamestate.current_turn = p1.id if tour == player1Name else p2.id
+        gamestate.turns += 1
+
 
 #region Historic Games Functions
 def historicGames() :
@@ -212,30 +297,37 @@ def historicGames() :
 #endregion
 
 ## WIP start game and place boat aleatorily
-def game(width: int, height: int, depth: int) :
+def game(width: int, height: int, depth: int):
 
-    plateaujoueur1 = Plateau(width, height, depth)
-    plateaujoueur2 = Plateau(width, height, depth)
-
-    boatPlacement(plateaujoueur1,1)
-    boatPlacement(plateaujoueur2,2)
-
-    player1Boat1Name = "Alpha"
-    player1Boat2Name = "Beta"
-    player1Boat3Name = "Charlie"
-    player2Boat1Name = "Red force"
-    player2Boat2Name = "Oro Jackson"
-    player2Boat3Name = "Thousand sunny"
-    
-    os.system('clear')
-
+    # Création des joueurs
     player1Name = input("Quel est le nom du 1e joueur ?\n")
     player2Name = input("Quel est le nom du 2e joueur ?\n")
-    
+
+    p1 = Player(player1Name)
+    p2 = Player(player2Name)
+
+    # Création du GameState
+    gamestate = GameState(p1, p2, (width, height, depth))
+
+    # Maintenant on travaille SUR les plateaux du GameState
+    plateaujoueur1 = gamestate.p1.plateau
+    plateaujoueur2 = gamestate.p2.plateau
+
+    # Placement réel sur les plateaux qui seront sauvegardés
+    boatPlacement(plateaujoueur1, gamestate.p1, 1)
+    boatPlacement(plateaujoueur2, gamestate.p2, 2)
+
+
     tour = player1Name
-    
     game_music()
-    while True :
+
+    while True:
+        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
+        if choix == "o":
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
         if tour == plateaujoueur1 :
             plateaujoueur1.display()
             plateaujoueur1.display(False)
@@ -268,8 +360,7 @@ def game(width: int, height: int, depth: int) :
         tour = player2Name if tour == player1Name else player1Name
 
 # Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
-def boatPlacement(plateau: Plateau,player_id: int) : 
-
+def boatPlacement(plateau: Plateau, player: Player, player_id: int):
     # WIP -> create random boat placement but not for all player yet 
     boat_sizes = [1,2,3]
     
@@ -292,6 +383,7 @@ def boatPlacement(plateau: Plateau,player_id: int) :
             if plateau.is_within_bounds(x, y, z):
                 try:
                     plateau.place_boat((x, y, z), size, is_horizontal, boat)
+                    player.boats.append(boat)
                     placed = True
                 except :
                     continue

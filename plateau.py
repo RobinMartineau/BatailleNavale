@@ -17,6 +17,24 @@ class Boat:
     def is_sunk(self) -> bool:
         """Check if the boat is sunk."""
         return len(self.hits) == self.size
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "positions": self.positions,
+            "hits": self.hits
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        boat = cls(data["name"])
+        boat.id = data["id"]
+        boat.positions = [tuple(pos) for pos in data["positions"]]
+        boat.hits = [tuple(hit) for hit in data["hits"]]
+        boat.size = len(boat.positions)
+        return boat
+    
 
 class Cell:
     def __init__(self):
@@ -184,7 +202,60 @@ class Plateau:
             cell.revealed = True
             sonar_sound()
             cell.adjacent_revealed = reveal_cells
-            
+
+    def to_dict(self):
+        return {
+            "width": self.width,
+            "height": self.height,
+            "depth": self.depth,
+            "grids": {
+                str(z): [
+                    [
+                        {
+                            "boat": cell.boat.id if cell.boat else None,
+                            "hit": cell.hit,
+                            "revealed": cell.revealed,
+                            "adjacent_revealed": cell.adjacent_revealed
+                        }
+                        for cell in row
+                    ]
+                    for row in grid.cells
+                ]
+                for z, grid in enumerate(self.grids)
+            }
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict, boats: list[Boat]):
+
+        width = data["width"]
+        height = data["height"]
+        depth = data["depth"]
+
+        plateau = cls(width, height, depth)
+
+        grids = data["grids"]
+        boat_map = {boat.id: boat for boat in boats}
+
+        for z in range(depth):
+            layer = grids[str(z)]          
+            for y, row in enumerate(layer):
+                for x, cell_data in enumerate(row):
+                    cell = plateau.grids[z].cells[y][x]
+
+                    boat_id = cell_data["boat"]
+                    if boat_id is not None:
+                        cell.boat = boat_map.get(boat_id)
+
+                    cell.hit = cell_data["hit"]
+                    cell.revealed = cell_data["revealed"]
+                    cell.adjacent_revealed = cell_data["adjacent_revealed"]
+
+        return plateau
+
+
+
+     
 # if __name__ == "__main__":
 #     plateau = Plateau(5, 5, 2)
 #     boat = Boat("Bato")
