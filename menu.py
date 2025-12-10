@@ -12,11 +12,11 @@ from gamestate import *
 
 #region Menu Function
 def Menu() :
-    os.system('clear')
+    os.system('cls') if os.name == 'nt' else os.system('cls') if os.name == 'nt' else os.system('cls') if os.name == 'nt' else os.system('clear')
     background_music()
     print(AscciNameBatailleNavale())
     input("Appuyez sur Entrée pour continuer...")
-    os.system('clear')
+    os.system('cls') if os.name == 'nt' else os.system('clear')
     while True:
         print(
             "┌───────────────────────────┐\n"
@@ -32,7 +32,7 @@ def Menu() :
 
         choiceMenu = testInt()
 
-        os.system('clear')
+        os.system('cls') if os.name == 'nt' else os.system('clear')
         match choiceMenu : 
             
             case 0 : 
@@ -68,7 +68,7 @@ def newGame():
 
         choiceNewGame = testInt()
         
-        os.system('clear')
+        os.system('cls') if os.name == 'nt' else os.system('clear')
         match choiceNewGame : 
             case 0 :
                 return 
@@ -109,7 +109,7 @@ def deleteGame() :
 
         choiceDeleteGame = testInt()
 
-        os.system('clear')
+        os.system('cls') if os.name == 'nt' else os.system('clear')
         match choiceDeleteGame : 
             case 0 : 
                 return 
@@ -132,7 +132,7 @@ def deleteGame() :
                         filePath = os.path.join(folder, files[choiceDelete])
                         os.remove(filePath)
 
-                        os.system('clear')
+                        os.system('cls') if os.name == 'nt' else os.system('clear')
                         print(f"\nLa partie '{files[choiceDelete]}' a été supprimée.\n")
 
                     else:
@@ -167,7 +167,7 @@ def deleteGame() :
                 except : 
                     print("Une erreur a eu lieu pendant la suppression des parties en cours")
             case _ : 
-                os.system('clear')
+                os.system('cls') if os.name == 'nt' else os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 #endregion
 
@@ -244,7 +244,7 @@ def resumeGame():
         print("\n case profondeur ? ")
         caseDepth = testInt()
 
-        os.system('clear')
+        os.system('cls') if os.name == 'nt' else os.system('clear')
 
         # Tir selon le joueur
         if tour == player1Name:
@@ -279,7 +279,7 @@ def historicGames() :
         choiceFile = input()
         if 0 <= choiceVisible < len(files):
             filePath = os.path.join(folder, files[choiceVisible])
-            os.system('clear')
+            os.system('cls') if os.name == 'nt' else os.system('clear')
             if choiceFile == "o" :
                 os.system(f'xdg-open "{filePath}" >/dev/null 2>&1')
             else :
@@ -346,7 +346,7 @@ def game(width: int, height: int, depth: int):
         print("\n case profondeur ? ")
         caseDepth = testInt()
 
-        os.system('clear')
+        os.system('cls') if os.name == 'nt' else os.system('clear')
 
         if tour == player1Name : 
             plateaujoueur1.shoot(caseHeight,caseWidth,caseDepth)

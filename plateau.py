@@ -78,17 +78,17 @@ class Grid:
     def __init__(self, width: int, height: int, depth: int = 0):
         self.width = width
         self.height = height
-        self.cells = [[Cell() for _ in range(width + 1)] for _ in range(height + 1)]
+        self.cells = [[Cell() for _ in range(width)] for _ in range(height)]
         self.depth: int = depth
 
     def display(self, owner_view: bool = True):
         """Display the grid from the owner's or opponent's view."""
         f_row = '  '
-        f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width + 1))
+        f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width))
         print(f_row)
-        for y in range(self.height + 1):
+        for y in range(self.height):
             row = f'{y} '
-            for x in range(self.width + 1):
+            for x in range(self.width):
                 row += str(self.cells[y][x]) if owner_view else self.cells[y][x].opponent_str()
             print(row)
         print()
@@ -148,7 +148,6 @@ class Plateau:
     
     def display(self, owner_view: bool = True):
         """Display the plateau from the owner's or opponent's view."""
-        print(f"======== {'Owner' if owner_view else 'Opponent'}'s View ========")
         for z in range(self.depth):
             print(f"{(z+1)*100}m")
             self.grids[z].display(owner_view=owner_view)
@@ -177,7 +176,6 @@ class Plateau:
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
         """Place a boat at the given position with specified orientation and size."""
         sx, sy, sz = position
-        print(f"Placing boat at ({sx}, {sy}, {sz}), size: {size}, horizontal: {is_horizontal}")
         if not self.is_within_bounds(sx, sy, sz):
             print("Boat placement is out of bounds.")
             return
@@ -220,8 +218,8 @@ class Plateau:
         plateau = Plateau(width, height, depth)
         for z_str, grid_data in data.items():
             z = int(z_str)
-            for y in range(height + 1):
-                for x in range(width + 1):
+            for y in range(height):
+                for x in range(width):
                     cell_data = grid_data[y][x]
                     cell = plateau.grids[z].cells[y][x]
                     cell.hit = cell_data["hit"]
