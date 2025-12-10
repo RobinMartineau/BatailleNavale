@@ -217,50 +217,7 @@ def resumeGame():
     print("Partie chargée ! Reprise du jeu...")
     game_music()
 
-
-    while True:
-        if gamestate.current_turn == p1.id:
-            plateau1.display(player1Name, player2Name, True)
-            plateau2.display(player2Name, player1Name, False)
-
-        else:
-            plateau2.display(player2Name, player1Name, True)
-            plateau1.display(player1Name, player2Name, False)
-        if gamestate.current_turn == p1.id:
-            tour = player1Name
-        else:
-            tour = player2Name  
-        print(f"\nAu tour de {tour} de jouer :\n")
-        try:
-            print(f"{BOLD}Où voulez-vous tirer ?{RESET}", end="")
-            caseWidth, caseHeight, caseDepth = testCellInput(gamestate, "\nEntrez les coordonnées \n(ex: A23 pour tirer en colonne A, ligne 2, profondeur 300) : ", allow_exit=True)
-        except ExitGame:
-            gamestate.save_gamestate()
-            print("Partie sauvegardée.")
-            return
-
-        clearConsole()
-
-        if gamestate.current_turn == p1.id:
-            plateau2.shoot(caseWidth, caseHeight, caseDepth)
-        else:
-            plateau1.shoot(caseWidth, caseHeight, caseDepth)
-
-        if gamestate.is_winner():
-            winner_name = player1Name if gamestate.winner == p1.id else player2Name
-            print(f"\n Félicitations {winner_name}, vous avez gagné la partie !")
-            gamestate.save_gamestate()
-            return
-
-        time.sleep(2)
-        clearConsole()
-        print("\nChangement de joueur en cours...")
-        time.sleep(5)
-
-        if gamestate.current_turn == p1.id:
-            gamestate.current_turn = p2.id
-        else:
-            gamestate.current_turn = p1.id
+    in_game(gamestate, p1, p2, plateau1, plateau2, player1Name, player2Name)
 #endregion
 
 #region Historic Games Functions
@@ -321,27 +278,27 @@ def game(width: int, height: int, depth: int):
     gamestate.current_turn = p1.id
     game_music()
 
-    while True:
+    in_game(gamestate, p1, p2, plateaujoueur1, plateaujoueur2, player1Name, player2Name)
+#endregion
 
+#region In game function
+def in_game(gamestate: GameState, p1: Player, p2: Player, plateau1: Plateau, plateau2: Plateau, player1Name: str, player2Name: str):
+    while True:
         if gamestate.current_turn == p1.id:
-            plateaujoueur1.display(player1Name, player2Name, True)
-            plateaujoueur2.display(player2Name, player1Name, False)
-        else : 
-            plateaujoueur2.display(player2Name, player1Name, True)
-            plateaujoueur1.display(player1Name, player2Name, False)
+            plateau1.display(player1Name, player2Name, True)
+            plateau2.display(player2Name, player1Name, False)
+
+        else:
+            plateau2.display(player2Name, player1Name, True)
+            plateau1.display(player1Name, player2Name, False)
         if gamestate.current_turn == p1.id:
             tour = player1Name
         else:
             tour = player2Name  
-
-        print(f"Au tour de {tour} de jouer :")
-
-        print("Où voulez-vous tirer ?")
-
+        print(f"\nAu tour de {tour} de jouer :\n")
         try:
-            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
-            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
-            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+            print(f"{BOLD}Où voulez-vous tirer ?{RESET}", end="")
+            caseWidth, caseHeight, caseDepth = testCellInput(gamestate, "\nEntrez les coordonnées \n(ex: A23 pour tirer en colonne A, ligne 2, profondeur 300) : ", allow_exit=True)
         except ExitGame:
             gamestate.save_gamestate()
             print("Partie sauvegardée.")
@@ -350,20 +307,21 @@ def game(width: int, height: int, depth: int):
         clearConsole()
 
         if gamestate.current_turn == p1.id:
-            plateaujoueur2.shoot(caseWidth, caseHeight, caseDepth)
+            plateau2.shoot(caseWidth, caseHeight, caseDepth)
         else:
-            plateaujoueur1.shoot(caseWidth, caseHeight, caseDepth)
+            plateau1.shoot(caseWidth, caseHeight, caseDepth)
 
         if gamestate.is_winner():
             winner_name = player1Name if gamestate.winner == p1.id else player2Name
             print(f"\n Félicitations {winner_name}, vous avez gagné la partie !")
             gamestate.save_gamestate()
             return
-        
+
         time.sleep(2)
         clearConsole()
         print("\nChangement de joueur en cours...")
         time.sleep(5)
+        clearConsole()
 
         if gamestate.current_turn == p1.id:
             gamestate.current_turn = p2.id
@@ -371,8 +329,7 @@ def game(width: int, height: int, depth: int):
             gamestate.current_turn = p1.id
 #endregion
 
-
-# Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
+#region Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
 def boatPlacement(gamestate: GameState, plateau: Plateau, player: Player, player_id: int):
     # WIP -> create random boat placement but not for all player yet 
     boat_sizes = [1,2,3]
@@ -400,6 +357,7 @@ def boatPlacement(gamestate: GameState, plateau: Plateau, player: Player, player
                     placed = True
                 except :
                     continue
-    print(f"Plateau du joueur {player_id} :")
+    # print(f"Plateau du joueur {player_id} :")
     # plateau.display(player.name, gamestate.p2.name if player_id == gamestate.p1.id else gamestate.p1.name, True)
-    
+#endregion    
+
