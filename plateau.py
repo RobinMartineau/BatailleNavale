@@ -29,23 +29,14 @@ def cell_str_owner(cell):
 def cell_str_enemy(cell):
     """Return styled cell for enemy view."""
     if cell.hit:
-        if cell.boat:
-            if cell.boat.is_sunk():
-                return f"{RED}C {RESET}"
-            return f"{RED}T {RESET}"
+        if cell.boat is not None:
+             return f"{RED}C {RESET}" if cell.boat.is_sunk() else f"{RED}T {RESET}"  # Ship on cell sunk or hit
         else:
-            if cell.adjacent_revealed:
-                return f"{CYAN}V {RESET}"
-            return f"{BLUE}R {RESET}"
-
-    if cell.revealed:
-        return f"{GREY}~ {RESET}"
-
-    return ". "
-
-
-
-
+            return f"{CYAN}V {RESET}" if cell.adjacent_revealed else f"{BLUE}R {RESET}"  # Missed shot revealed with/without adjacent ship
+    elif cell.revealed:
+        return f"{CYAN}V {RESET}" if cell.adjacent_revealed else f"{BLUE}R {RESET}"  # Revealed cell with/without adjacent ship
+    else:
+        return '. '  # Unrevealed cell
 
 class Boat:
     def __init__(self, name: str, positions: list[tuple[int, int, int]] | None = None, hits: list[tuple[int, int, int]] | None = None):
@@ -72,10 +63,10 @@ class Boat:
             "size": self.size
         }
     
-    def from_dict(data: dict) -> 'Boat':
+    def from_dict(id: str, data: dict) -> 'Boat':
         boat = Boat(data["name"], data["positions"], data["hits"])
-        boat.size = data["size"]
-        boat.id = data["id"]
+        boat.size = data.get("size") or len(boat.positions)
+        boat.id = id
         return boat
 
 class Cell:
@@ -250,10 +241,10 @@ class Plateau:
         # Ligne de fin
         print("═" * 52)
 
-    def display(self, owner_view: bool = True):
+    def display(self, owner_name, opp_name, owner_view: bool = True):
         """Beautiful styled display for the plateau."""
 
-        title = "OWNER VIEW" if owner_view else "OPPONENT VIEW"
+        title = f"PLATEAU DE {owner_name}" if owner_view else f"PLATEAU DE {owner_name} VU PAR {opp_name}"
         border_top = "┌" + "─" * 48 + "┐"
         border_bottom = "└" + "─" * 48 + "┘"
 
@@ -267,20 +258,21 @@ class Plateau:
             depth_label = f"{(z+1)*100}m"
 
             # ── HEADER DU NIVEAU ────────────────────────────────
-            print(f"{BLUE}{BOLD}┌────── LEVEL {depth_label:^8} ──────┐{RESET}")
+            print(f"{BLUE}{BOLD}LEVEL {depth_label:^8}{RESET}")
+            print(f"{BLUE}{BOLD}┌" + "─" * (4 + 2 * (self.width)) + "┐" + RESET)
 
             # Coordonnées X (colonnes)
-            header = "│    "  # espace pour le Y
+            header = f"{BLUE}│{RESET}    "  # espace pour le Y
             for x in range(self.width):
                 header += f"{GREY}{chr(ord('A') + x)} {RESET}"
-            header += "│"
+            header += f"{BLUE}│{RESET}"
             print(header)
 
-            print("│" + "─" * (4 + 2 * (self.width)) + "│")  # ligne horizontale
+            print(f"{BLUE}│{RESET}" + "─" * (4 + 2 * (self.width)) + f"{BLUE}│{RESET}")  # ligne horizontale
 
             # LIGNES DU PLATEAU
             for y in range(self.height):
-                row = f"│ {YELLOW}{y}{RESET}  "
+                row = f"{BLUE}│{RESET} {YELLOW}{y}{RESET}  "
                 for x in range(self.width):
                     cell = self.grids[z].cells[y][x]
 
@@ -289,7 +281,7 @@ class Plateau:
                     else:
                         row += cell_str_enemy(cell)
 
-                row += "│"
+                row += f"{BLUE}│{RESET}"
                 print(row)
 
             print(f"{BLUE}{BOLD}└" + "─" * (4 + 2 * (self.width)) + "┘" + RESET)

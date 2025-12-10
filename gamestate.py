@@ -23,7 +23,7 @@ class Player:
     
     def init_from_dict(self, data: dict):
         self.name = data["name"]
-        self.boats = [Boat.from_dict(boat_data) for boat_data in data["boats"].values()]
+        self.boats = [Boat.from_dict(boat_id, boat_data) for boat_id, boat_data in data["boats"].items()]
         if data["plateau"]:
             self.plateau = Plateau.from_dict(data["plateau"], self.boats)
         else:

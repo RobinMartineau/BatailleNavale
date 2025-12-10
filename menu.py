@@ -220,13 +220,12 @@ def resumeGame():
 
     while True:
         if gamestate.current_turn == p1.id:
-            plateau1.display()
-            plateau2.display(False)
+            plateau1.display(player1Name, player2Name, True)
+            plateau2.display(player2Name, player1Name, False)
 
         else:
-            plateau2.display()
-            plateau1.display(False)
-
+            plateau2.display(player2Name, player1Name, True)
+            plateau1.display(player1Name, player2Name, False)
         if gamestate.current_turn == p1.id:
             tour = player1Name
         else:
@@ -256,9 +255,9 @@ def resumeGame():
             return
 
         if gamestate.current_turn == p1.id:
-            plateau2.display(False)
+            plateau2.display(player2Name, player1Name, False)
         else:
-            plateau1.display(False)
+            plateau1.display(player1Name, player2Name, False)
 
         clearConsole()
         print("\nChangement de joueur en cours...")
@@ -321,8 +320,9 @@ def game(width: int, height: int, depth: int):
     plateaujoueur1 = gamestate.p1.plateau
     plateaujoueur2 = gamestate.p2.plateau
 
-    boatPlacement(plateaujoueur1, gamestate.p1, 1)
-    boatPlacement(plateaujoueur2, gamestate.p2, 2)
+    # Placement réel sur les plateaux qui seront sauvegardés
+    boatPlacement(gamestate, plateaujoueur1, gamestate.p1, 1)
+    boatPlacement(gamestate, plateaujoueur2, gamestate.p2, 2)
 
     gamestate.current_turn = p1.id
     game_music()
@@ -330,12 +330,11 @@ def game(width: int, height: int, depth: int):
     while True:
 
         if gamestate.current_turn == p1.id:
-            plateaujoueur1.display()
-            plateaujoueur2.display(False)
+            plateaujoueur1.display(player1Name, player2Name, True)
+            plateaujoueur2.display(player2Name, player1Name, False)
         else : 
-            plateaujoueur2.display()
-            plateaujoueur1.display(False)
-
+            plateaujoueur2.display(player2Name, player1Name, True)
+            plateaujoueur1.display(player1Name, player2Name, False)
         if gamestate.current_turn == p1.id:
             tour = player1Name
         else:
@@ -368,7 +367,7 @@ def game(width: int, height: int, depth: int):
             gamestate.save_gamestate()
             return
 
-        plateaujoueur1.display(False)
+        plateaujoueur1.display(player1Name, player2Name, False)
 
         clearConsole()
         print("\nChangement de joueur en cours...")
@@ -380,8 +379,9 @@ def game(width: int, height: int, depth: int):
             gamestate.current_turn = p1.id
 #endregion
 
-#region Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
-def boatPlacement(plateau: Plateau, player: Player, player_id: int):
+
+# Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
+def boatPlacement(gamestate: GameState, plateau: Plateau, player: Player, player_id: int):
     # WIP -> create random boat placement but not for all player yet 
     boat_sizes = [1,2,3]
     
@@ -409,5 +409,5 @@ def boatPlacement(plateau: Plateau, player: Player, player_id: int):
                 except :
                     continue
     print(f"Plateau du joueur {player_id} :")
-    plateau.display(True)
-#endregion
+    plateau.display(player.name, gamestate.p2.name if player_id == gamestate.p1.id else gamestate.p1.name, True)
+    
