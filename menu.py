@@ -254,11 +254,7 @@ def resumeGame():
             gamestate.save_gamestate()
             return
 
-        if gamestate.current_turn == p1.id:
-            plateau2.display(player2Name, player1Name, False)
-        else:
-            plateau1.display(player1Name, player2Name, False)
-
+        time.sleep(2)
         clearConsole()
         print("\nChangement de joueur en cours...")
         time.sleep(5)
@@ -353,7 +349,6 @@ def game(width: int, height: int, depth: int):
             print("Partie sauvegardée.")
             return
 
-
         clearConsole()
 
         if gamestate.current_turn == p1.id:
@@ -366,9 +361,8 @@ def game(width: int, height: int, depth: int):
             print(f"\n Félicitations {winner_name}, vous avez gagné la partie !")
             gamestate.save_gamestate()
             return
-
-        plateaujoueur1.display(player1Name, player2Name, False)
-
+        
+        time.sleep(2)
         clearConsole()
         print("\nChangement de joueur en cours...")
         time.sleep(5)
@@ -409,5 +403,5 @@ def boatPlacement(gamestate: GameState, plateau: Plateau, player: Player, player
                 except :
                     continue
     print(f"Plateau du joueur {player_id} :")
-    plateau.display(player.name, gamestate.p2.name if player_id == gamestate.p1.id else gamestate.p1.name, True)
+    # plateau.display(player.name, gamestate.p2.name if player_id == gamestate.p1.id else gamestate.p1.name, True)
     
