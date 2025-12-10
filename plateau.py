@@ -271,17 +271,17 @@ class Plateau:
 
             # Coordonnées X (colonnes)
             header = "│    "  # espace pour le Y
-            for x in range(self.width + 1):
+            for x in range(self.width):
                 header += f"{GREY}{chr(ord('A') + x)} {RESET}"
             header += "│"
             print(header)
 
-            print("│" + "─" * (4 + 2 * (self.width + 1)) + "│")  # ligne horizontale
+            print("│" + "─" * (4 + 2 * (self.width)) + "│")  # ligne horizontale
 
             # LIGNES DU PLATEAU
-            for y in range(self.height + 1):
+            for y in range(self.height):
                 row = f"│ {YELLOW}{y}{RESET}  "
-                for x in range(self.width + 1):
+                for x in range(self.width):
                     cell = self.grids[z].cells[y][x]
 
                     if owner_view:
@@ -292,7 +292,7 @@ class Plateau:
                 row += "│"
                 print(row)
 
-            print(f"{BLUE}{BOLD}└" + "─" * (4 + 2 * (self.width + 1)) + "┘" + RESET)
+            print(f"{BLUE}{BOLD}└" + "─" * (4 + 2 * (self.width)) + "┘" + RESET)
             print()
 
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
