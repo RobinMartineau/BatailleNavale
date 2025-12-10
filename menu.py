@@ -61,9 +61,9 @@ def newGame():
             "│  1 · Plateau 5 × 10 × 3              │\n"
             "│  2 · (Expérimental) Taille au choix  │\n"
             "│  0 · Retour                          │\n"
-            "└──────────────────────────────────────┘"
+            "└──────────────────────────────────────┘\n"
+            "( Tapez 'exit' pour quitter la partie à tout moment.)"
         )
-
 
         choiceNewGame = testInt()
         
@@ -75,6 +75,7 @@ def newGame():
                 game(5, 10, 3)
             case 2 :
                 width, height, depth = personalizedBoard()
+                clearConsole()
                 game(width, height, depth)
             case _ :
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
@@ -104,7 +105,6 @@ def deleteGame() :
             "│  0 · Retour                                 │\n"
             "└─────────────────────────────────────────────┘"
         )
-
 
         choiceDeleteGame = testInt()
 
@@ -170,7 +170,7 @@ def deleteGame() :
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 #endregion
 
-# WIP resume game function
+#region resume game function
 def resumeGame():
     folder = "saved_games/"
     files = [f for f in os.listdir(folder) if f.endswith(".json")]
@@ -210,13 +210,8 @@ def resumeGame():
     print("Partie chargée ! Reprise du jeu...")
     game_music()
 
-    while True:
-        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
-        if choix.lower() == "o":
-            gamestate.save_gamestate()
-            print("Partie sauvegardée.")
-            return
 
+    while True:
         if gamestate.current_turn == p1.id:
             plateau1.display()
             plateau2.display(False)
@@ -231,12 +226,14 @@ def resumeGame():
             tour = player2Name  
         print(f"\nAu tour de {tour} de jouer :")
 
-        print("\n case largeur ? ")
-        caseWidth = testInt()
-        print("\n case longueur ? ")
-        caseHeight = testInt()
-        print("\n case profondeur ? ")
-        caseDepth = testInt()
+        try:
+            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
+            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
+            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+        except ExitGame:
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
 
         clearConsole()
 
@@ -262,6 +259,7 @@ def resumeGame():
             gamestate.current_turn = p2.id
         else:
             gamestate.current_turn = p1.id
+#endregion
 
 #region Historic Games Functions
 def historicGames() :
@@ -300,24 +298,20 @@ def historicGames() :
         print("\nUne erreur a eu lieu pendant la consultation de la partie\n")
 #endregion
 
-## WIP start game and place boat aleatorily
+#region start game and place boat aleatorily
 def game(width: int, height: int, depth: int):
 
-    # Création des joueurs
     player1Name = input("Quel est le nom du 1e joueur ?\n")
     player2Name = input("Quel est le nom du 2e joueur ?\n")
 
     p1 = Player(player1Name)
     p2 = Player(player2Name)
 
-    # Création du GameState
     gamestate = GameState(p1, p2, (width, height, depth))
 
-    # Maintenant on travaille SUR les plateaux du GameState
     plateaujoueur1 = gamestate.p1.plateau
     plateaujoueur2 = gamestate.p2.plateau
 
-    # Placement réel sur les plateaux qui seront sauvegardés
     boatPlacement(plateaujoueur1, gamestate.p1, 1)
     boatPlacement(plateaujoueur2, gamestate.p2, 2)
 
@@ -325,11 +319,6 @@ def game(width: int, height: int, depth: int):
     game_music()
 
     while True:
-        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
-        if choix == "o":
-            gamestate.save_gamestate()
-            print("Partie sauvegardée.")
-            return
 
         if gamestate.current_turn == p1.id:
             plateaujoueur1.display()
@@ -347,12 +336,15 @@ def game(width: int, height: int, depth: int):
 
         print("Où voulez-vous tirer ?")
 
-        print("\n case largeur ? ")
-        caseWidth = testInt()
-        print("\ncase longueur ? ")
-        caseHeight = testInt()
-        print("\n case profondeur ? ")
-        caseDepth = testInt()
+        try:
+            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
+            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
+            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+        except ExitGame:
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
 
         clearConsole()
 
@@ -375,9 +367,9 @@ def game(width: int, height: int, depth: int):
             gamestate.current_turn = p2.id
         else:
             gamestate.current_turn = p1.id
+#endregion
 
-
-# Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
+#region Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
 def boatPlacement(plateau: Plateau, player: Player, player_id: int):
     # WIP -> create random boat placement but not for all player yet 
     boat_sizes = [1,2,3]
@@ -407,4 +399,4 @@ def boatPlacement(plateau: Plateau, player: Player, player_id: int):
                     continue
     print(f"Plateau du joueur {player_id} :")
     plateau.display(True)
-    
+#endregion
