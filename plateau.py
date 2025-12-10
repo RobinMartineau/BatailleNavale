@@ -124,7 +124,8 @@ class Grid:
     def __init__(self, width: int, height: int, depth: int = 0):
         self.width = width
         self.height = height
-        self.cells = [[Cell() for _ in range(width)] for _ in range(height)]
+        # Grille inclusive : indices 0..width et 0..height pour accepter la colonne/ligne max.
+        self.cells = [[Cell() for _ in range(width + 1)] for _ in range(height + 1)]
         self.depth: int = depth
 
     def displayAncienneVers(self, owner_view: bool = True):

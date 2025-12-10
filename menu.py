@@ -49,6 +49,11 @@ def Menu() :
 #endregion
 
 #region New Game Functions
+def askSoloMode() -> bool:
+    """Retourne True si le joueur veut affronter l'ordinateur."""
+    choix = input("\nVoulez-vous jouer contre l'ordinateur ? (o/n) ").strip().lower()
+    return choix == "o"
+
 def newGame(): 
     while True : 
         print(
@@ -72,11 +77,17 @@ def newGame():
             case 0 :
                 return 
             case 1 :
-                game(5, 10, 3)
+                if askSoloMode():
+                    game_vs_computer(5, 10, 3)
+                else :
+                    game(5, 10, 3)
             case 2 :
                 width, height, depth = personalizedBoard()
                 clearConsole()
-                game(width, height, depth)
+                if askSoloMode():
+                    game_vs_computer(width, height, depth)
+                else :
+                    game(width, height, depth)
             case _ :
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 #endregion
@@ -299,6 +310,80 @@ def historicGames() :
 #endregion
 
 #region start game and place boat aleatorily
+def game_vs_computer(width: int, height: int, depth: int):
+    """Partie solo contre un ordinateur qui tire alA(c)atoirement."""
+    playerName = input("Quel est votre nom ?\n")
+    aiName = "Ordinateur"
+
+    p1 = Player(playerName)
+    p2 = Player(aiName)
+
+    gamestate = GameState(p1, p2, (width, height, depth))
+
+    plateaujoueur1 = gamestate.p1.plateau
+    plateaujoueur2 = gamestate.p2.plateau
+
+    boatPlacement(plateaujoueur1, gamestate.p1, 1)
+    boatPlacement(plateaujoueur2, gamestate.p2, 2)
+
+    gamestate.current_turn = p1.id
+    game_music()
+
+    ai_shots: set[tuple[int, int, int]] = set()
+
+    while True:
+
+        if gamestate.current_turn == p1.id:
+            # Tour du joueur humain
+            plateaujoueur1.display()
+            plateaujoueur2.display(False)
+
+            print(f"Au tour de {playerName} de jouer :")
+            print("OA1 voulez-vous tirer ?")
+
+            try:
+                caseWidth = testInt("\n case largeur ? ", allow_exit=True)
+                caseHeight = testInt("\n case longueur ? ", allow_exit=True)
+                caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+            except ExitGame:
+                gamestate.save_gamestate()
+                print("Partie sauvegardAce.")
+                return
+
+            clearConsole()
+            plateaujoueur2.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            # Tour de l'ordinateur : tir alA(c)atoire non rAcpetA(c)
+            max_shots = max(1, plateaujoueur1.width * plateaujoueur1.height * plateaujoueur1.depth)
+            if len(ai_shots) >= max_shots:
+                print("L'ordinateur n'a plus de coups possibles.")
+                return
+
+            while True:
+                shot_x = random.randint(0, max(plateaujoueur1.width - 1, 0))
+                shot_y = random.randint(0, max(plateaujoueur1.height - 1, 0))
+                shot_z = random.randint(0, max(plateaujoueur1.depth - 1, 0))
+                ai_shot = (shot_x, shot_y, shot_z)
+                if ai_shot not in ai_shots:
+                    ai_shots.add(ai_shot)
+                    break
+
+            print(f"L'ordinateur tire en ({shot_x}, {shot_y}, {shot_z})")
+            plateaujoueur1.shoot(shot_x, shot_y, shot_z)
+
+        if gamestate.is_winner():
+            winner_name = playerName if gamestate.winner == p1.id else aiName
+            print(f"\n FAclicitations {winner_name}, vous avez gagnAc la partie !")
+            gamestate.save_gamestate()
+            return
+
+        time.sleep(5)
+
+        if gamestate.current_turn == p1.id:
+            gamestate.current_turn = p2.id
+        else:
+            gamestate.current_turn = p1.id
+
 def game(width: int, height: int, depth: int):
 
     player1Name = input("Quel est le nom du 1e joueur ?\n")
