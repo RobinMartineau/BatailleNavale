@@ -1,68 +1,87 @@
 import json
 import os
+import random
+import time
+
 from Error import *
 from coordinates import *
 from plateau import *
-import random
+from animation_shell import *
+from music import *
+from gamestate import *
 
-
+#region Menu Function
 def Menu() :
+    os.system('clear')
+    background_music()
+    print(AscciNameBatailleNavale())
+    input("Appuyez sur Entrée pour continuer...")
+    os.system('clear')
     while True:
-        print("\n-------- Menu Bataille naval --------")
-        print("1- Nouvelle partie")
-        print("2- Reprendre une partie")
-        print("3- Historiques des parties")
-        print("4- Supprimer les parties en cours")
-        print("0- Quitter")
+        print(
+            "┌───────────────────────────┐\n"
+            "│      MENU PRINCIPAL       │\n"
+            "├───────────────────────────┤\n"
+            "│  1 · Nouvelle partie      │\n"
+            "│  2 · Reprendre une partie │\n"
+            "│  3 · Historique des jeux  │\n"
+            "│  4 · Supprimer sauvegardes│\n"
+            "│  0 · Quitter              │\n"
+            "└───────────────────────────┘"
+        )
 
         choiceMenu = testInt()
-        
+
+        os.system('clear')
         match choiceMenu : 
             
             case 0 : 
                 break
             case 1 : 
-                os.system('clear')
                 newGame()
             case 2 :
-                os.system('clear')
-                gameExists()
+                resumeGame()
             case 3 :
-                os.system('clear')
                 historicGames()
             case 4 :
-                os.system('clear')
                 deleteGame()
             case _:
-                os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
+#endregion
 
+#region New Game Functions
 def newGame(): 
     while True : 
-        print("\n-------- Nouvelle partie --------")
-        print("\n-------- Choix du plateau --------")
-        print("LargeurxLongueurxHauteur")
-        print("1- Plateau de 5x10x3")
-        print("2- (Experimentale) Taille du plateau au choix")
-        print("0- Retour")
+        print(
+            "┌──────────────────────────────────────┐\n"
+            "│           NOUVELLE  PARTIE           │\n"
+            "├──────────────────────────────────────┤\n"
+            "│           Choix du plateau           │\n"
+            "│     Largeur × Longueur × Hauteur     │\n"
+            "│                                      │\n"
+            "│  1 · Plateau 5 × 10 × 3              │\n"
+            "│  2 · (Expérimental) Taille au choix  │\n"
+            "│  0 · Retour                          │\n"
+            "└──────────────────────────────────────┘"
+        )
+
 
         choiceNewGame = testInt()
-
+        
+        os.system('clear')
         match choiceNewGame : 
             case 0 :
-                os.system('clear')
                 return 
             case 1 :
-                os.system('clear')
                 game(5, 10, 3)
             case 2 :
-                os.system('clear')
                 width, height, depth = personalizedBoard()
                 game(width, height, depth)
             case _ :
-                os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
+#endregion
 
+#region Personalized Board Functions
 def personalizedBoard() :
     while True : 
         print("\nQuel largeur pour le plateau ? ")
@@ -72,30 +91,66 @@ def personalizedBoard() :
         print("\nQuel profondeur pour le plateau ? ")
         depth = testInt()
         return (width, height, depth)
+#endregion
 
+#region Delete Game Functions
 def deleteGame() : 
     while True: 
-        print("\n-------- Suppression Parties en cours --------")
-        print("1- Supprimer une partie précisemment")
-        print("2- Supprimer l'ensemble des parties en cours")
-        print("0- Retour")
+        print(
+            "┌─────────────────────────────────────────────┐\n"
+            "│      SUPPRESSION DES  PARTIES EN COURS      │\n"
+            "├─────────────────────────────────────────────┤\n"
+            "│  1 · Supprimer une partie précisément       │\n"
+            "│  2 · Supprimer toutes les parties en cours  │\n"
+            "│  0 · Retour                                 │\n"
+            "└─────────────────────────────────────────────┘"
+        )
+
 
         choiceDeleteGame = testInt()
 
+        os.system('clear')
         match choiceDeleteGame : 
             case 0 : 
-                os.system('clear')
                 return 
             case 1 : 
-                os.system('clear')
-            case 2 :
-                os.system('clear')
                 try : 
-                    folder = "historicGames/"
-                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ?")
+                    folder = "saved_games/"
+                    files = [f for f in os.listdir(folder) if f.endswith(".json")]
+
+                    if not files :
+                        print("Aucune partie en cours à supprimer !")
+                        return
+                    
+                    print("Voici les parties en cours disponibles :\n")
+                    for index, file in enumerate(files):
+                        print(f"{index + 1} · {file}")
+
+                    print("\nChoisissez le numéro de la partie à supprimer : ")
+                    choiceDelete = testInt() - 1
+                    if 0 <= choiceDelete < len(files):
+                        filePath = os.path.join(folder, files[choiceDelete])
+                        os.remove(filePath)
+
+                        os.system('clear')
+                        print(f"\nLa partie '{files[choiceDelete]}' a été supprimée.\n")
+
+                    else:
+                        print("\nNuméro invalide. Aucune partie supprimée.\n")
+                    
+                    return
+                except :
+
+                    print("\nUne erreur a eu lieu pendant la suppression de la partie en cours\n")
+
+            case 2 :
+                try : 
+                    folder = "saved_games/"
+                    choiceDeleteAll = input("Voulez-vous vraiment supprimer toutes les parties en cours ? (o/n) : ")
                     
                     if choiceDeleteAll == "o" : 
                         filesDelete = False
+                        print()
                         for file in os.listdir(folder):
                             if file.endswith(".json") :
                                 filePath = os.path.join(folder,file)
@@ -105,6 +160,7 @@ def deleteGame() :
                                     os.remove(filePath)
                         if filesDelete == False : 
                             print("Aucune partie n'a été supprimé !")
+                        print()
                     else : 
                         print("Suppression Annulé")
                     return
@@ -113,34 +169,200 @@ def deleteGame() :
             case _ : 
                 os.system('clear')
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
+#endregion
 
-def gameExists() :
-    return
+# WIP resume game function
+def resumeGame():
+    folder = "saved_games/"
+    files = [f for f in os.listdir(folder) if f.endswith(".json")]
 
-def historicGames() :
-    return
-
-## WIP start game and place boat aleatorily
-def game(width: int, height: int, depth: int) :
-
-    plateaujoueur1 = Plateau(5, 10, 3)
-    plateaujoueur2 = Plateau(5, 10, 3)
-
-    boatPlacement(plateaujoueur1,1)
-    boatPlacement(plateaujoueur2,2)
-
-    while True :
-        # Lancement de la game ici
-        
-            
+    if not files:
+        print("Aucune partie à reprendre.")
         return
 
+    print("Voici les parties disponibles :")
+    for idx, file in enumerate(files):
+        print(f"{idx+1} · {file}")
 
-# Place random boats on the plateau
-def boatPlacement(plateau: Plateau,player_id: int) : 
+    print("\nQuelle partie voulez-vous charger ?")
+    choice = testInt() - 1
 
+    if choice < 0 or choice >= len(files):
+        print("Choix invalide.")
+        return
+
+    save_id = files[choice].replace(".json", "")
+
+    print("Chargement de la partie...")
+    p1 = Player("temp1")
+    p2 = Player("temp2")
+    gamestate = GameState(p1, p2)
+    gamestate.load_json(save_id)
+
+    p1 = gamestate.p1
+    p2 = gamestate.p2
+
+    plateau1 = p1.plateau
+    plateau2 = p2.plateau
+
+    player1Name = p1.name
+    player2Name = p2.name
+
+    tour = player1Name if gamestate.current_turn == p1.id else player2Name
+
+    print("Partie chargée ! Reprise du jeu...")
+    game_music()
+
+    while True:
+        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
+        if choix.lower() == "o":
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
+        if tour == player1Name:
+            print("\n=== Plateau de", player1Name, "(vue propriétaire) ===")
+            plateau1.display(True)
+
+            print("\n=== Plateau de", player1Name, "(vue adversaire) ===")
+            plateau1.display(False)
+
+        else:
+            print("\n=== Plateau de", player2Name, "(vue propriétaire) ===")
+            plateau2.display(True)
+
+            print("\n=== Plateau de", player2Name, "(vue adversaire) ===")
+            plateau2.display(False)
+
+
+        print(f"\nAu tour de {tour} de jouer :")
+
+        print("\n case largeur ? ")
+        caseWidth = testInt()
+        print("\n case longueur ? ")
+        caseHeight = testInt()
+        print("\n case profondeur ? ")
+        caseDepth = testInt()
+
+        os.system('clear')
+
+        # Tir selon le joueur
+        if tour == player1Name:
+            plateau1.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            plateau2.shoot(caseWidth, caseHeight, caseDepth)
+
+        time.sleep(2)
+
+        tour = player2Name if tour == player1Name else player1Name
+        gamestate.current_turn = p1.id if tour == player1Name else p2.id
+        gamestate.turns += 1
+
+
+#region Historic Games Functions
+def historicGames() :
+    try : 
+        folder = "saved_games/"
+        files = [f for f in os.listdir(folder) if f.endswith(".json")]
+
+        if not files :
+            print("Aucune partie en cours à consulter !")
+            return
+                    
+        print("Voici les parties en cours disponibles :\n")
+        for index, file in enumerate(files):
+            print(f"{index + 1} · {file}")
+
+        print("\nQuelle partie voulez-vous consulter ?")
+        choiceVisible = testInt() - 1
+        print("\nVoulez-vous ouvrir cette partie dans un fichier texte (sinon dans le terminal) ? (o/n)")
+        choiceFile = input()
+        if 0 <= choiceVisible < len(files):
+            filePath = os.path.join(folder, files[choiceVisible])
+            os.system('clear')
+            if choiceFile == "o" :
+                os.system(f'xdg-open "{filePath}" >/dev/null 2>&1')
+            else :
+                print(f"\nContenu de la partie '{files[choiceVisible]}':\n")
+                with open(filePath, 'r') as file:
+                    data = json.load(file)
+                    print(json.dumps(data, indent=4))
+                print("\nFin de la consultation de la partie.\n")
+        else:
+            print("\nNuméro invalide. Aucune partie consulté.\n")
+                    
+        return
+    except :
+        print("\nUne erreur a eu lieu pendant la consultation de la partie\n")
+#endregion
+
+## WIP start game and place boat aleatorily
+def game(width: int, height: int, depth: int):
+
+    # Création des joueurs
+    player1Name = input("Quel est le nom du 1e joueur ?\n")
+    player2Name = input("Quel est le nom du 2e joueur ?\n")
+
+    p1 = Player(player1Name)
+    p2 = Player(player2Name)
+
+    # Création du GameState
+    gamestate = GameState(p1, p2, (width, height, depth))
+
+    # Maintenant on travaille SUR les plateaux du GameState
+    plateaujoueur1 = gamestate.p1.plateau
+    plateaujoueur2 = gamestate.p2.plateau
+
+    # Placement réel sur les plateaux qui seront sauvegardés
+    boatPlacement(plateaujoueur1, gamestate.p1, 1)
+    boatPlacement(plateaujoueur2, gamestate.p2, 2)
+
+
+    tour = player1Name
+    game_music()
+
+    while True:
+        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
+        if choix == "o":
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
+        if tour == plateaujoueur1 :
+            plateaujoueur1.display()
+            plateaujoueur1.display(False)
+        else : 
+            plateaujoueur2.display()
+            plateaujoueur2.display(False)
+
+        print(f"Au tour de {tour} de jouer :")
+
+        print("Où voulez-vous tirer ?")
+
+        print("\n case largeur ? ")
+        caseWidth = testInt()
+        print("\ncase longueur ? ")
+        caseHeight = testInt()
+        print("\n case profondeur ? ")
+        caseDepth = testInt()
+
+        os.system('clear')
+
+        if tour == player1Name : 
+            plateaujoueur1.shoot(caseHeight,caseWidth,caseDepth)
+        else : 
+            plateaujoueur2.shoot(caseHeight,caseWidth,caseDepth)
+        
+        plateaujoueur1.display(False)
+
+        time.sleep(5)
+
+        tour = player2Name if tour == player1Name else player1Name
+
+# Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
+def boatPlacement(plateau: Plateau, player: Player, player_id: int):
     # WIP -> create random boat placement but not for all player yet 
-    boat_sizes = [3, 2, 1]
+    boat_sizes = [1,2,3]
     
     for size in boat_sizes:
         placed = False
@@ -161,6 +383,7 @@ def boatPlacement(plateau: Plateau,player_id: int) :
             if plateau.is_within_bounds(x, y, z):
                 try:
                     plateau.place_boat((x, y, z), size, is_horizontal, boat)
+                    player.boats.append(boat)
                     placed = True
                 except :
                     continue
