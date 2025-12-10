@@ -56,6 +56,11 @@ def Menu() :
 #endregion
 
 #region New Game Functions
+def askSoloMode() -> bool:
+    """Retourne True si le joueur veut affronter l'ordinateur."""
+    choix = input("\nVoulez-vous jouer contre l'ordinateur ? (o/n) ").strip().lower()
+    return choix == "o"
+
 def newGame(): 
     while True : 
         print(
@@ -79,11 +84,17 @@ def newGame():
             case 0 :
                 return 
             case 1 :
-                game(5, 10, 3)
+                if askSoloMode():
+                    game_vs_computer(5, 10, 3)
+                else:
+                    game(5, 10, 3)
             case 2 :
                 width, height, depth = personalizedBoard()
                 clearConsole()
-                game(width, height, depth)
+                if askSoloMode():
+                    game_vs_computer(width, height, depth)
+                else:
+                    game(width, height, depth)
             case _ :
                 print("Vous devez choisir un numéro par rapport aux propositions ci-dessous !")
 #endregion
@@ -258,6 +269,27 @@ def historicGames() :
 #endregion
 
 #region start game and place boat aleatorily
+def game_vs_computer(width: int, height: int, depth: int):
+    """Partie solo : un joueur humain contre un ordinateur qui tire alA(c)atoirement."""
+    playerName = input("Quel est votre nom ?\n")
+    aiName = "Ordinateur"
+
+    p1 = Player(playerName)
+    p2 = Player(aiName)
+
+    gamestate = GameState(p1, p2, (width, height, depth))
+
+    plateau_humain = gamestate.p1.plateau
+    plateau_ai = gamestate.p2.plateau
+
+    boatPlacement(gamestate, plateau_humain, gamestate.p1, 1)
+    boatPlacement(gamestate, plateau_ai, gamestate.p2, 2)
+
+    gamestate.current_turn = p1.id
+    game_music()
+
+    in_game_vs_computer(gamestate, p1, p2, plateau_humain, plateau_ai, playerName, aiName)
+
 def game(width: int, height: int, depth: int):
 
     player1Name = input("Quel est le nom du 1e joueur ?\n")
@@ -327,6 +359,71 @@ def in_game(gamestate: GameState, p1: Player, p2: Player, plateau1: Plateau, pla
             gamestate.current_turn = p2.id
         else:
             gamestate.current_turn = p1.id
+#endregion
+
+#region In game vs computer
+def in_game_vs_computer(gamestate: GameState, p_human: Player, p_ai: Player, plateau_h: Plateau, plateau_ai: Plateau, humanName: str, aiName: str):
+    """Boucle de jeu pour le mode solo."""
+    ai_shots: set[tuple[int, int, int]] = set()
+
+    while True:
+        if gamestate.current_turn == p_human.id:
+            plateau_h.display(humanName, aiName, True)
+            plateau_ai.display(aiName, humanName, False)
+            tour_name = humanName
+        else:
+            plateau_ai.display(aiName, humanName, True)
+            plateau_h.display(humanName, aiName, False)
+            tour_name = aiName
+
+        print(f"\nAu tour de {tour_name} de jouer :\n")
+
+        if gamestate.current_turn == p_human.id:
+            try:
+                print(f"{BOLD}OA1 voulez-vous tirer ?{RESET}", end="")
+                caseWidth, caseHeight, caseDepth = testCellInput(gamestate, "\nEntrez les coordonnAces \n(ex: A23 pour tirer en colonne A, ligne 2, profondeur 300) : ", allow_exit=True)
+            except ExitGame:
+                gamestate.save_gamestate()
+                print("Partie sauvegardAce.")
+                return
+
+            clearConsole()
+            plateau_ai.shoot(caseWidth, caseHeight, caseDepth)
+        else:
+            # Tir de l'ordinateur : coordonnAces alA(c)atoires non rAcpetA(c) et dans les bornes.
+            max_shots = max(1, plateau_h.width * plateau_h.height * plateau_h.depth)
+            if len(ai_shots) >= max_shots:
+                print("L'ordinateur n'a plus de coups possibles.")
+                return
+
+            while True:
+                shot_x = random.randint(0, max(plateau_h.width - 1, 0))
+                shot_y = random.randint(0, max(plateau_h.height - 1, 0))
+                shot_z = random.randint(0, max(plateau_h.depth - 1, 0))
+                ai_shot = (shot_x, shot_y, shot_z)
+                if ai_shot not in ai_shots:
+                    ai_shots.add(ai_shot)
+                    break
+
+            print(f"L'ordinateur tire en ({shot_x}, {shot_y}, {shot_z})")
+            plateau_h.shoot(shot_x, shot_y, shot_z)
+
+        if gamestate.is_winner():
+            winner_name = humanName if gamestate.winner == p_human.id else aiName
+            print(f"\n FAclicitations {winner_name}, vous avez gagnAc la partie !")
+            gamestate.save_gamestate()
+            return
+
+        time.sleep(2)
+        clearConsole()
+        print("\nChangement de joueur en cours...")
+        time.sleep(5)
+        clearConsole()
+
+        if gamestate.current_turn == p_human.id:
+            gamestate.current_turn = p_ai.id
+        else:
+            gamestate.current_turn = p_human.id
 #endregion
 
 #region Place random boats on the plateau (revoir si le fonctionnement est nickel ou si supperposition de bateau)
