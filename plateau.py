@@ -160,7 +160,7 @@ class Grid:
 
     def is_within_bounds(self, x: int, y: int) -> bool:
         """Check if the given coordinates are within the plateau bounds."""
-        return 0 <= x <= self.width and 0 <= y <= self.height
+        return 0 <= x < self.width and 0 <= y < self.height
     
     def boat_fits(self, boat: Boat) -> bool:
         for bx, by, bz in boat.positions:
@@ -321,15 +321,21 @@ class Plateau:
 
         reveal_adjacent = False
         for cx, cy, cz in valid_positions:
-            cell = self.grids[cz].cells[cy][cx]
-            if cell.boat is not None and not cell.hit:
-                reveal_adjacent = True
-                break
+            try:
+                cell = self.grids[cz].cells[cy][cx]
+                if cell.boat is not None and not cell.hit:
+                    reveal_adjacent = True
+                    break
+            except IndexError:
+                continue
 
         for cx, cy, cz in valid_positions:
-            cell = self.grids[cz].cells[cy][cx]
-            cell.revealed = True
-            cell.adjacent_revealed = reveal_adjacent
+            try:
+                cell = self.grids[cz].cells[cy][cx]
+                cell.revealed = True
+                cell.adjacent_revealed = reveal_adjacent
+            except IndexError:
+                continue
 
     def to_dict(self) -> dict:
         return {f"{i}": grid.to_array() for i, grid in enumerate(self.grids)}

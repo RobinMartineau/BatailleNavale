@@ -218,7 +218,6 @@ def resumeGame():
     game_music()
 
     in_game(gamestate, p1, p2, plateau1, plateau2, player1Name, player2Name)
-
 #endregion
 
 #region Historic Games Functions
@@ -296,12 +295,10 @@ def in_game(gamestate: GameState, p1: Player, p2: Player, plateau1: Plateau, pla
             tour = player1Name
         else:
             tour = player2Name  
-        print(f"\nAu tour de {tour} de jouer :")
-
+        print(f"\nAu tour de {tour} de jouer :\n")
         try:
-            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
-            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
-            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+            print(f"{BOLD}Où voulez-vous tirer ?{RESET}", end="")
+            caseWidth, caseHeight, caseDepth = testCellInput(gamestate, "\nEntrez les coordonnées \n(ex: A23 pour tirer en colonne A, ligne 2, profondeur 300) : ", allow_exit=True)
         except ExitGame:
             gamestate.save_gamestate()
             print("Partie sauvegardée.")
