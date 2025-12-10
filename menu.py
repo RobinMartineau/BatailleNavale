@@ -324,6 +324,7 @@ def in_game(gamestate: GameState, p1: Player, p2: Player, plateau1: Plateau, pla
         clearConsole()
         print("\nChangement de joueur en cours...")
         time.sleep(5)
+        clearConsole()
 
         if gamestate.current_turn == p1.id:
             gamestate.current_turn = p2.id
