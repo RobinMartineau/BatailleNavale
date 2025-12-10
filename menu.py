@@ -209,13 +209,8 @@ def resumeGame():
     print("Partie chargée ! Reprise du jeu...")
     game_music()
 
-    while True:
-        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
-        if choix.lower() == "o":
-            gamestate.save_gamestate()
-            print("Partie sauvegardée.")
-            return
 
+    while True:
         if gamestate.current_turn == p1.id:
             plateau1.display()
             plateau2.display(False)
@@ -230,12 +225,14 @@ def resumeGame():
             tour = player2Name  
         print(f"\nAu tour de {tour} de jouer :")
 
-        print("\n case largeur ? ")
-        caseWidth = testInt()
-        print("\n case longueur ? ")
-        caseHeight = testInt()
-        print("\n case profondeur ? ")
-        caseDepth = testInt()
+        try:
+            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
+            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
+            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+        except ExitGame:
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
 
         clearConsole()
 
@@ -321,11 +318,6 @@ def game(width: int, height: int, depth: int):
     game_music()
 
     while True:
-        choix = input("Voulez-vous arrêter la partie ? (o/n) ")
-        if choix == "o":
-            gamestate.save_gamestate()
-            print("Partie sauvegardée.")
-            return
 
         if gamestate.current_turn == p1.id:
             plateaujoueur1.display()
@@ -343,12 +335,15 @@ def game(width: int, height: int, depth: int):
 
         print("Où voulez-vous tirer ?")
 
-        print("\n case largeur ? ")
-        caseWidth = testInt()
-        print("\ncase longueur ? ")
-        caseHeight = testInt()
-        print("\n case profondeur ? ")
-        caseDepth = testInt()
+        try:
+            caseWidth = testInt("\n case largeur ? ", allow_exit=True)
+            caseHeight = testInt("\n case longueur ? ", allow_exit=True)
+            caseDepth = testInt("\n case profondeur ? ", allow_exit=True)
+        except ExitGame:
+            gamestate.save_gamestate()
+            print("Partie sauvegardée.")
+            return
+
 
         clearConsole()
 
