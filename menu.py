@@ -31,7 +31,6 @@ def Menu() :
         )
 
         choiceMenu = testInt()
-
         clearConsole()
         match choiceMenu : 
             

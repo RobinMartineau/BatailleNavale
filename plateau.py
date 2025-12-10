@@ -64,20 +64,19 @@ class Boat:
         """Check if the boat is sunk."""
         return len(self.hits) >= self.size
     
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
-            "id": self.id,
             "name": self.name,
             "positions": self.positions,
-            "hits": self.hits
+            "hits": self.hits,
+            "size": self.size
         }
     
-    @classmethod
-    def from_dict(cls, data):
-        boat = cls(data["name"], data.get("positions"), data.get("hits"))
+    def from_dict(data: dict) -> 'Boat':
+        boat = Boat(data["name"], data["positions"], data["hits"])
+        boat.size = data["size"]
         boat.id = data["id"]
         return boat
-    
 
 class Cell:
     def __init__(self):
@@ -112,22 +111,30 @@ class Cell:
             return 'V ' if self.adjacent_revealed else 'R '  # Revealed cell with/without adjacent ship
         else:
             return '. '  # Unrevealed cell
+        
+    def to_dict(self) -> dict:
+        return {
+            "boat": self.boat.id if self.boat else None,
+            "hit": self.hit,
+            "revealed": self.revealed,
+            "adjacent_revealed": self.adjacent_revealed
+        }
 
 class Grid:
     def __init__(self, width: int, height: int, depth: int = 0):
         self.width = width
         self.height = height
-        self.cells = [[Cell() for _ in range(width + 1)] for _ in range(height + 1)]
+        self.cells = [[Cell() for _ in range(width)] for _ in range(height)]
         self.depth: int = depth
 
     def displayAncienneVers(self, owner_view: bool = True):
         """Display the grid from the owner's or opponent's view."""
         f_row = '  '
-        f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width + 1))
+        f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width))
         print(f_row)
-        for y in range(self.height + 1):
+        for y in range(self.height):
             row = f'{y} '
-            for x in range(self.width + 1):
+            for x in range(self.width):
                 row += str(self.cells[y][x]) if owner_view else self.cells[y][x].opponent_str()
             print(row)
         print()
@@ -198,6 +205,9 @@ class Grid:
             explosion_sound()
             print("Hit!")
             return 1
+        
+    def to_array(self) -> dict:
+        return [[cell.to_dict() for cell in row] for row in self.cells]
 
     def is_sunk(self):
         return all(pos in self.hits for pos in self.positions)
@@ -216,7 +226,6 @@ class Plateau:
     
     def displayAncienneVersion(self, owner_view: bool = True):
         """Display the plateau from the owner's or opponent's view."""
-        print(f"======== {'Owner' if owner_view else 'Opponent'}'s View ========")
         for z in range(self.depth):
             print(f"{(z+1)*100}m")
             self.grids[z].display(owner_view=owner_view)
@@ -289,7 +298,6 @@ class Plateau:
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
         """Place a boat at the given position with specified orientation and size."""
         sx, sy, sz = position
-        print(f"Placing boat at ({sx}, {sy}, {sz}), size: {size}, horizontal: {is_horizontal}")
         if not self.is_within_bounds(sx, sy, sz):
             print("Boat placement is out of bounds.")
             return
@@ -331,52 +339,22 @@ class Plateau:
             cell.revealed = True
             cell.adjacent_revealed = reveal_adjacent
 
-    def to_dict(self):
-        return {
-            "width": self.width,
-            "height": self.height,
-            "depth": self.depth,
-            "grids": {
-                str(z): [
-                    [
-                        {
-                            "boat": cell.boat.id if cell.boat else None,
-                            "hit": cell.hit,
-                            "revealed": cell.revealed,
-                            "adjacent_revealed": cell.adjacent_revealed
-                        }
-                        for cell in row
-                    ]
-                    for row in grid.cells
-                ]
-                for z, grid in enumerate(self.grids)
-            }
-        }
-
-    @classmethod
-    def from_dict(cls, data: dict, boats: list[Boat]):
-
-        width = data["width"]
-        height = data["height"]
-        depth = data["depth"]
-
-        plateau = cls(width, height, depth)
-
-        grids = data["grids"]
-        boat_map = {boat.id: boat for boat in boats}
-
-        for z in range(depth):
-            layer = grids[str(z)]          
-            for y, row in enumerate(layer):
-                for x, cell_data in enumerate(row):
+    def to_dict(self) -> dict:
+        return {f"{i}": grid.to_array() for i, grid in enumerate(self.grids)}
+    
+    def from_dict(data: dict, boats: list[Boat]) -> 'Plateau':
+        depth = len(data)
+        width = len(data["0"][0]) - 1
+        height = len(data["0"]) - 1
+        plateau = Plateau(width, height, depth)
+        for z_str, grid_data in data.items():
+            z = int(z_str)
+            for y in range(height):
+                for x in range(width):
+                    cell_data = grid_data[y][x]
                     cell = plateau.grids[z].cells[y][x]
-
-                    boat_id = cell_data["boat"]
-                    if boat_id is not None:
-                        cell.boat = boat_map.get(boat_id)
-
                     cell.hit = cell_data["hit"]
                     cell.revealed = cell_data["revealed"]
                     cell.adjacent_revealed = cell_data["adjacent_revealed"]
-
+                    cell.boat = next((boat for boat in boats if boat.id == cell_data["boat"]), None) if cell_data["boat"] else None
         return plateau
