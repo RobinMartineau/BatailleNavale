@@ -15,7 +15,14 @@ def Menu() :
     clearConsole()
     background_music()
     print(AscciNameBatailleNavale())
-    input("Appuyez sur Entrée pour continuer...")
+    inputGame = input("Appuyez sur Entrée pour continuer...\n")
+    if inputGame == "sudo apt play charge" :
+        charge()
+        sleep(3)
+    elif inputGame == "sudo apt play bbrrllaa" :
+        BRRRRRLAA()
+        sleep(3)
+
     clearConsole()
     while True:
         print(
@@ -253,6 +260,8 @@ def resumeGame():
         else:
             plateau1.display(False)
 
+        clearConsole()
+        print("\nChangement de joueur en cours...")
         time.sleep(5)
 
         if gamestate.current_turn == p1.id:
@@ -361,6 +370,8 @@ def game(width: int, height: int, depth: int):
 
         plateaujoueur1.display(False)
 
+        clearConsole()
+        print("\nChangement de joueur en cours...")
         time.sleep(5)
 
         if gamestate.current_turn == p1.id:
