@@ -1,12 +1,58 @@
 from uuid import uuid4
 from music import *
 
+RESET = "\033[0m"
+CYAN = "\033[36m"
+BLUE = "\033[34m"
+YELLOW = "\033[33m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+BOLD = "\033[1m"
+GREY = "\033[90m"
+
+def cell_str_owner(cell):
+    """Return styled cell for owner view."""
+    if cell.boat:
+        if cell.boat.is_sunk():
+            return f"{RED}C {RESET}"   # Coulé
+        if cell.hit:
+            return f"{RED}T {RESET}"   # Touché
+        return f"{GREEN}B {RESET}"     # Bateau non touché
+    else:
+        if cell.revealed:
+            if cell.adjacent_revealed:
+                return f"{CYAN}V {RESET}"  # Vide proche bateau
+            return f"{BLUE}R {RESET}"      # Révélé vide
+        return ". "  # inconnu
+
+
+def cell_str_enemy(cell):
+    """Return styled cell for enemy view."""
+    if cell.hit:
+        if cell.boat:
+            if cell.boat.is_sunk():
+                return f"{RED}C {RESET}"
+            return f"{RED}T {RESET}"
+        else:
+            if cell.adjacent_revealed:
+                return f"{CYAN}V {RESET}"
+            return f"{BLUE}R {RESET}"
+
+    if cell.revealed:
+        return f"{GREY}~ {RESET}"
+
+    return ". "
+
+
+
+
+
 class Boat:
-    def __init__(self, name: str, positions: list[tuple[int, int, int]] = [], hits: list[tuple[int, int, int]] = []):
+    def __init__(self, name: str, positions: list[tuple[int, int, int]] | None = None, hits: list[tuple[int, int, int]] | None = None):
         self.id: str = str(uuid4())
         self.name: str = name
-        self.positions: list[tuple[int, int, int]] = positions
-        self.hits: list[tuple[int, int, int]] = hits
+        self.positions: list[tuple[int, int, int]] = [tuple(pos) for pos in positions] if positions else []
+        self.hits: list[tuple[int, int, int]] = [tuple(hit) for hit in hits] if hits else []
         self.size: int = len(self.positions)
 
     def init_boat_pos(self, positions: list[tuple[int, int, int]]):
@@ -16,7 +62,7 @@ class Boat:
 
     def is_sunk(self) -> bool:
         """Check if the boat is sunk."""
-        return len(self.hits) == self.size
+        return len(self.hits) >= self.size
     
     def to_dict(self) -> dict:
         return {
@@ -81,7 +127,7 @@ class Grid:
         self.cells = [[Cell() for _ in range(width)] for _ in range(height)]
         self.depth: int = depth
 
-    def display(self, owner_view: bool = True):
+    def displayAncienneVers(self, owner_view: bool = True):
         """Display the grid from the owner's or opponent's view."""
         f_row = '  '
         f_row += ''.join(f'{chr(ord("A") + x)} ' for x in range(self.width))
@@ -92,6 +138,34 @@ class Grid:
                 row += str(self.cells[y][x]) if owner_view else self.cells[y][x].opponent_str()
             print(row)
         print()
+
+    def display(self, owner_view: bool = True):
+        """Beautiful and modern display for a single grid layer."""
+
+        # Ligne des colonnes (A B C ...)
+        header = "    "  # espace pour le y
+        for x in range(self.width + 1):
+            header += f"{GREY}{chr(ord('A') + x)} {RESET}"
+        print(header)
+
+        # Ligne horizontale
+        print("   " + "─" * (2 * (self.width + 1)))
+
+        # Corps de la grille
+        for y in range(self.height + 1):
+            row = f"{YELLOW}{y:<2}{RESET} "  # numéro de la ligne
+
+            for x in range(self.width + 1):
+                cell = self.cells[y][x]
+                if owner_view:
+                    row += cell_str_owner(cell)
+                else:
+                    row += cell_str_enemy(cell)
+
+            print(row)
+
+        print()
+
 
     def is_within_bounds(self, x: int, y: int) -> bool:
         """Check if the given coordinates are within the plateau bounds."""
@@ -126,7 +200,7 @@ class Grid:
             return 0
         else:
             cell.hit = True
-            cell.boat.hits.append((x, y))
+            cell.boat.hits.append((x, y, self.depth))
 
             explosion_sound()
             print("Hit!")
@@ -135,6 +209,10 @@ class Grid:
     def to_array(self) -> dict:
         return [[cell.to_dict() for cell in row] for row in self.cells]
 
+    def is_sunk(self):
+        return all(pos in self.hits for pos in self.positions)
+
+    
 class Plateau:
     def __init__(self, width, height, depth):
         self.width: int = width
@@ -146,7 +224,7 @@ class Plateau:
         """Check if the given coordinates are within the plateau bounds."""
         return 0 <= z < self.depth and self.grids[z].is_within_bounds(x, y)
     
-    def display(self, owner_view: bool = True):
+    def displayAncienneVersion(self, owner_view: bool = True):
         """Display the plateau from the owner's or opponent's view."""
         for z in range(self.depth):
             print(f"{(z+1)*100}m")
@@ -172,6 +250,50 @@ class Plateau:
         # Ligne de fin
         print("═" * 52)
 
+    def display(self, owner_view: bool = True):
+        """Beautiful styled display for the plateau."""
+
+        title = "OWNER VIEW" if owner_view else "OPPONENT VIEW"
+        border_top = "┌" + "─" * 48 + "┐"
+        border_bottom = "└" + "─" * 48 + "┘"
+
+        print()
+        print(border_top)
+        print(f"│{BOLD}{CYAN}{title:^48}{RESET}│")
+        print(border_bottom)
+        print()
+
+        for z in range(self.depth):
+            depth_label = f"{(z+1)*100}m"
+
+            # ── HEADER DU NIVEAU ────────────────────────────────
+            print(f"{BLUE}{BOLD}┌────── LEVEL {depth_label:^8} ──────┐{RESET}")
+
+            # Coordonnées X (colonnes)
+            header = "│    "  # espace pour le Y
+            for x in range(self.width + 1):
+                header += f"{GREY}{chr(ord('A') + x)} {RESET}"
+            header += "│"
+            print(header)
+
+            print("│" + "─" * (4 + 2 * (self.width + 1)) + "│")  # ligne horizontale
+
+            # LIGNES DU PLATEAU
+            for y in range(self.height + 1):
+                row = f"│ {YELLOW}{y}{RESET}  "
+                for x in range(self.width + 1):
+                    cell = self.grids[z].cells[y][x]
+
+                    if owner_view:
+                        row += cell_str_owner(cell)
+                    else:
+                        row += cell_str_enemy(cell)
+
+                row += "│"
+                print(row)
+
+            print(f"{BLUE}{BOLD}└" + "─" * (4 + 2 * (self.width + 1)) + "┘" + RESET)
+            print()
 
     def place_boat(self, position: tuple[int, int, int], size: int, is_horizontal: bool, boat: Boat):
         """Place a boat at the given position with specified orientation and size."""
@@ -190,23 +312,32 @@ class Plateau:
             pass
     
     def reveal_cells(self, position: tuple[int, int, int]):
-        """Reveal the cell at the given position and its adjacent cells."""
         x, y, z = position
-        to_check_positions = [(x, y, z), (x+1, y, z), (x-1, y, z), (x, y+1, z), (x, y-1, z), (x, y, z+1), (x, y, z-1)]
-        reveal_cells = False
-        for cx, cy, cz in to_check_positions:
-            if not self.is_within_bounds(cx, cy, cz):
-                to_check_positions.remove((cx, cy, cz))
-            else:
-                if self.grids[cz].cells[cy][cx].boat is not None and not self.grids[cz].cells[cy][cx].hit:
-                    reveal_cells = True
-        for cx, cy, cz in to_check_positions:
+
+        to_check_positions = [
+            (x, y, z),
+            (x + 1, y, z), (x - 1, y, z),
+            (x, y + 1, z), (x, y - 1, z),
+            (x, y, z + 1), (x, y, z - 1)
+        ]
+
+        valid_positions = [
+            (cx, cy, cz)
+            for cx, cy, cz in to_check_positions
+            if self.is_within_bounds(cx, cy, cz)
+        ]
+
+        reveal_adjacent = False
+        for cx, cy, cz in valid_positions:
             cell = self.grids[cz].cells[cy][cx]
-            if cell.revealed and not cell.adjacent_revealed:
-                continue
+            if cell.boat is not None and not cell.hit:
+                reveal_adjacent = True
+                break
+
+        for cx, cy, cz in valid_positions:
+            cell = self.grids[cz].cells[cy][cx]
             cell.revealed = True
-            sonar_sound()
-            cell.adjacent_revealed = reveal_cells
+            cell.adjacent_revealed = reveal_adjacent
 
     def to_dict(self) -> dict:
         return {f"{i}": grid.to_array() for i, grid in enumerate(self.grids)}
@@ -227,4 +358,3 @@ class Plateau:
                     cell.adjacent_revealed = cell_data["adjacent_revealed"]
                     cell.boat = next((boat for boat in boats if boat.id == cell_data["boat"]), None) if cell_data["boat"] else None
         return plateau
-    

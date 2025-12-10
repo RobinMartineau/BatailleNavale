@@ -94,6 +94,22 @@ class GameState:
         with open(file_path, 'w') as f:
             f.write(gamestate_json)
 
+    def is_winner(self) -> bool:
+        current = self.p1 if self.current_turn == self.p1.id else self.p2
+        opponent = self.p2 if current == self.p1 else self.p1
+    
+        if not opponent.boats:
+            return False
+    
+        all_sunk = all(boat.is_sunk() for boat in opponent.boats)
+    
+        if all_sunk:
+            self.winner = current.id
+            self.ended_at = time.time()
+            return True
+    
+        return False
+
     def to_dict(self) -> dict:
         return {
             "title": "",
@@ -106,9 +122,3 @@ class GameState:
             "players": {f"{player.id}": player.to_dict() for player in [self.p1, self.p2]},
             "config": {}
         }
-    
-if __name__ == "__main__":
-    p1 = Player("Alice")
-    p2 = Player("Bob")
-    gamestate = GameState(p1, p2)
-    gamestate.save_gamestate()
